@@ -4,31 +4,53 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "1a27f92241109e67ff7d7e3636b41dd3",
+    "content-hash": "b3d61307b8f08cb772f7169854cec704",
     "packages": [
         {
-            "name": "avro/case-bundle",
-            "version": "v0.1.2",
-            "target-dir": "Avro/CaseBundle",
+            "name": "ddeboer/data-import",
+            "version": "0.20.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/jdewit/AvroCaseBundle.git",
-                "reference": "594a9501161a95a1b8b8d535acadf65f5f56671d"
+                "url": "https://github.com/ddeboer/data-import.git",
+                "reference": "8fe7e731bb52df0298707eb8fb8b9b8098395437"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jdewit/AvroCaseBundle/zipball/594a9501161a95a1b8b8d535acadf65f5f56671d",
-                "reference": "594a9501161a95a1b8b8d535acadf65f5f56671d",
+                "url": "https://api.github.com/repos/ddeboer/data-import/zipball/8fe7e731bb52df0298707eb8fb8b9b8098395437",
+                "reference": "8fe7e731bb52df0298707eb8fb8b9b8098395437",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.2",
-                "twig/twig": "*"
+                "php": ">=5.4.0",
+                "psr/log": "~1.0"
             },
-            "type": "symfony-bundle",
+            "require-dev": {
+                "doctrine/dbal": "~2.4",
+                "doctrine/orm": "~2.4",
+                "ext-iconv": "*",
+                "ext-mbstring": "*",
+                "ext-sqlite3": "*",
+                "henrikbjorn/phpspec-code-coverage": "~1.0",
+                "phpoffice/phpexcel": "*",
+                "phpspec/phpspec": "~2.1",
+                "symfony/console": "~2.8|~3.0",
+                "symfony/property-access": "~2.5",
+                "symfony/validator": "~2.8|~3.0"
+            },
+            "suggest": {
+                "doctrine/dbal": "If you want to use the DbalReader",
+                "ext-iconv": "For the CharsetValueConverter",
+                "ext-mbstring": "For the CharsetValueConverter",
+                "phpoffice/phpexcel": "If you want to use the ExcelReader",
+                "symfony/console": "If you want to use the ConsoleProgressWriter",
+                "symfony/property-access": "If you want to use the ObjectConverter",
+                "symfony/validator": "to use the ValidatorFilter"
+            },
+            "type": "library",
             "autoload": {
-                "psr-0": {
-                    "Avro\\CaseBundle": ""
+                "psr-4": {
+                    "Ddeboer\\DataImport\\": "src/",
+                    "Ddeboer\\DataImport\\Tests\\": "tests/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -37,42 +59,48 @@
             ],
             "authors": [
                 {
-                    "name": "Joris de Wit",
-                    "email": "joris.w.dewit@gmail.com"
+                    "name": "The community",
+                    "homepage": "https://github.com/ddeboer/data-import/graphs/contributors"
+                },
+                {
+                    "name": "David de Boer",
+                    "email": "david@ddeboer.nl"
                 }
             ],
-            "description": "Symfony2 Case Converter Bundle",
-            "homepage": "http://github.com/jdewit/AvroCaseBundle",
+            "description": "Import data from, and export data to, a range of file formats and media",
             "keywords": [
-                "camel",
-                "converter",
-                "pascal",
-                "title"
+                "csv",
+                "data",
+                "doctrine",
+                "excel",
+                "export",
+                "import"
             ],
-            "time": "2013-01-15T15:24:55+00:00"
+            "time": "2016-06-23T06:26:02+00:00"
         },
         {
-            "name": "avro/csv-bundle",
-            "version": "v0.1.0",
-            "target-dir": "Avro/CsvBundle",
+            "name": "ddeboer/data-import-bundle",
+            "version": "0.1.0",
+            "target-dir": "Ddeboer/DataImportBundle",
             "source": {
                 "type": "git",
-                "url": "https://github.com/jdewit/AvroCsvBundle.git",
-                "reference": "afcd8af2048ffdf66f285928a31a6164a87377a6"
+                "url": "https://github.com/ddeboer/DdeboerDataImportBundle.git",
+                "reference": "653961354e541380feef085791cb8368da3160db"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jdewit/AvroCsvBundle/zipball/afcd8af2048ffdf66f285928a31a6164a87377a6",
-                "reference": "afcd8af2048ffdf66f285928a31a6164a87377a6",
+                "url": "https://api.github.com/repos/ddeboer/DdeboerDataImportBundle/zipball/653961354e541380feef085791cb8368da3160db",
+                "reference": "653961354e541380feef085791cb8368da3160db",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.2"
+                "ddeboer/data-import": "*",
+                "php": ">=5.3.0"
             },
             "type": "symfony-bundle",
             "autoload": {
                 "psr-0": {
-                    "Avro\\CsvBundle": ""
+                    "Ddeboer\\DataImportBundle": ""
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -81,16 +109,18 @@
             ],
             "authors": [
                 {
-                    "name": "Joris de Wit",
-                    "email": "joris.w.dewit@gmail.com"
+                    "name": "David de Boer",
+                    "email": "david@ddeboer.nl",
+                    "homepage": "http://ddeboer.nl"
                 }
             ],
-            "description": "Symfony2 CSV Bundle",
-            "homepage": "http://github.com/jdewit/AvroCsvBundle",
+            "description": "A Symfony2 bundle for the ddeboer/data-import library",
+            "homepage": "https://github.com/ddeboer/DdeboerDataImportBundle",
             "keywords": [
-                "CSV converter"
+                "csv",
+                "import"
             ],
-            "time": "2012-12-14T21:30:51+00:00"
+            "time": "2014-04-04T11:01:36+00:00"
         },
         {
             "name": "doctrine/annotations",
@@ -1071,6 +1101,80 @@
                 "random"
             ],
             "time": "2016-11-07T23:38:38+00:00"
+        },
+        {
+            "name": "portphp/portphp",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/portphp/portphp.git",
+                "reference": "41eabb91c56a40fa7ada797608bde0703a5e164f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/portphp/portphp/zipball/41eabb91c56a40fa7ada797608bde0703a5e164f",
+                "reference": "41eabb91c56a40fa7ada797608bde0703a5e164f",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0",
+                "psr/log": "~1.0"
+            },
+            "conflict": {
+                "symfony/validator": "<2.5"
+            },
+            "require-dev": {
+                "doctrine/dbal": "~2.4",
+                "doctrine/instantiator": "^1.0.5",
+                "ext-iconv": "*",
+                "ext-mbstring": "*",
+                "ext-sqlite3": "*",
+                "phpspec/phpspec": "^2.1",
+                "phpunit/phpunit": "^4.0",
+                "symfony/property-access": "2.3",
+                "symfony/validator": "^2.7"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Port\\": "src/",
+                    "Port\\Tests\\": "tests/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "David de Boer",
+                    "email": "david@ddeboer.nl"
+                },
+                {
+                    "name": "Markus Bachmann",
+                    "email": "markus.bachmann@bachi.biz"
+                },
+                {
+                    "name": "Community contributors",
+                    "homepage": "https://github.com/portphp/portphp/graphs/contributors"
+                }
+            ],
+            "description": "Data import/export workflow",
+            "homepage": "https://github.com/portphp",
+            "keywords": [
+                "csv",
+                "data",
+                "doctrine",
+                "excel",
+                "export",
+                "import"
+            ],
+            "time": "2017-01-22 21:34:28"
         },
         {
             "name": "psr/log",
@@ -2227,6 +2331,92 @@
     ],
     "packages-dev": [
         {
+            "name": "avro/case-bundle",
+            "version": "v0.1.2",
+            "target-dir": "Avro/CaseBundle",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jdewit/AvroCaseBundle.git",
+                "reference": "594a9501161a95a1b8b8d535acadf65f5f56671d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jdewit/AvroCaseBundle/zipball/594a9501161a95a1b8b8d535acadf65f5f56671d",
+                "reference": "594a9501161a95a1b8b8d535acadf65f5f56671d",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2",
+                "twig/twig": "*"
+            },
+            "type": "symfony-bundle",
+            "autoload": {
+                "psr-0": {
+                    "Avro\\CaseBundle": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Joris de Wit",
+                    "email": "joris.w.dewit@gmail.com"
+                }
+            ],
+            "description": "Symfony2 Case Converter Bundle",
+            "homepage": "http://github.com/jdewit/AvroCaseBundle",
+            "keywords": [
+                "camel",
+                "converter",
+                "pascal",
+                "title"
+            ],
+            "time": "2013-01-15T15:24:55+00:00"
+        },
+        {
+            "name": "avro/csv-bundle",
+            "version": "v0.1.0",
+            "target-dir": "Avro/CsvBundle",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jdewit/AvroCsvBundle.git",
+                "reference": "afcd8af2048ffdf66f285928a31a6164a87377a6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jdewit/AvroCsvBundle/zipball/afcd8af2048ffdf66f285928a31a6164a87377a6",
+                "reference": "afcd8af2048ffdf66f285928a31a6164a87377a6",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "symfony-bundle",
+            "autoload": {
+                "psr-0": {
+                    "Avro\\CsvBundle": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Joris de Wit",
+                    "email": "joris.w.dewit@gmail.com"
+                }
+            ],
+            "description": "Symfony2 CSV Bundle",
+            "homepage": "http://github.com/jdewit/AvroCsvBundle",
+            "keywords": [
+                "CSV converter"
+            ],
+            "time": "2012-12-14T21:30:51+00:00"
+        },
+        {
             "name": "sensio/generator-bundle",
             "version": "v3.1.2",
             "source": {
@@ -2336,7 +2526,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "portphp/portphp": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
