@@ -4,8 +4,94 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "a33afcfb006183ae4519c3a0ab42b81c",
+    "content-hash": "1a27f92241109e67ff7d7e3636b41dd3",
     "packages": [
+        {
+            "name": "avro/case-bundle",
+            "version": "v0.1.2",
+            "target-dir": "Avro/CaseBundle",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jdewit/AvroCaseBundle.git",
+                "reference": "594a9501161a95a1b8b8d535acadf65f5f56671d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jdewit/AvroCaseBundle/zipball/594a9501161a95a1b8b8d535acadf65f5f56671d",
+                "reference": "594a9501161a95a1b8b8d535acadf65f5f56671d",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2",
+                "twig/twig": "*"
+            },
+            "type": "symfony-bundle",
+            "autoload": {
+                "psr-0": {
+                    "Avro\\CaseBundle": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Joris de Wit",
+                    "email": "joris.w.dewit@gmail.com"
+                }
+            ],
+            "description": "Symfony2 Case Converter Bundle",
+            "homepage": "http://github.com/jdewit/AvroCaseBundle",
+            "keywords": [
+                "camel",
+                "converter",
+                "pascal",
+                "title"
+            ],
+            "time": "2013-01-15T15:24:55+00:00"
+        },
+        {
+            "name": "avro/csv-bundle",
+            "version": "v0.1.0",
+            "target-dir": "Avro/CsvBundle",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jdewit/AvroCsvBundle.git",
+                "reference": "afcd8af2048ffdf66f285928a31a6164a87377a6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jdewit/AvroCsvBundle/zipball/afcd8af2048ffdf66f285928a31a6164a87377a6",
+                "reference": "afcd8af2048ffdf66f285928a31a6164a87377a6",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "symfony-bundle",
+            "autoload": {
+                "psr-0": {
+                    "Avro\\CsvBundle": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Joris de Wit",
+                    "email": "joris.w.dewit@gmail.com"
+                }
+            ],
+            "description": "Symfony2 CSV Bundle",
+            "homepage": "http://github.com/jdewit/AvroCsvBundle",
+            "keywords": [
+                "CSV converter"
+            ],
+            "time": "2012-12-14T21:30:51+00:00"
+        },
         {
             "name": "doctrine/annotations",
             "version": "v1.2.7",
@@ -1252,6 +1338,66 @@
             "time": "2016-12-29T10:02:40+00:00"
         },
         {
+            "name": "symfony/console",
+            "version": "v2.8.9",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/console.git",
+                "reference": "36e62335caca8a6e909c5c5bac4a8128149911c9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/console/zipball/36e62335caca8a6e909c5c5bac4a8128149911c9",
+                "reference": "36e62335caca8a6e909c5c5bac4a8128149911c9",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.9",
+                "symfony/polyfill-mbstring": "~1.0"
+            },
+            "require-dev": {
+                "psr/log": "~1.0",
+                "symfony/event-dispatcher": "~2.1|~3.0.0",
+                "symfony/process": "~2.1|~3.0.0"
+            },
+            "suggest": {
+                "psr/log": "For using the console logger",
+                "symfony/event-dispatcher": "",
+                "symfony/process": ""
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.8-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\Console\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony Console Component",
+            "homepage": "https://symfony.com",
+            "time": "2016-07-30T07:20:35+00:00"
+        },
+        {
             "name": "symfony/monolog-bundle",
             "version": "v3.0.3",
             "source": {
@@ -2196,8 +2342,5 @@
     "platform": {
         "php": ">=5.3.9"
     },
-    "platform-dev": [],
-    "platform-overrides": {
-        "php": "5.3.9"
-    }
+    "platform-dev": []
 }
