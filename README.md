@@ -1,4 +1,2 @@
-csv-parser
-==========
-
-A Symfony project created on January 25, 2017, 2:25 pm.
+# csv-parser
+A symfony 2 console application for importing csv files into a database
