@@ -9,6 +9,9 @@ use Doctrine\ORM\EntityManager;
 use Ddeboer\DataImport\Workflow\StepAggregator;
 use Ddeboer\DataImport\Reader\CsvReader;
 use Ddeboer\DataImport\Writer\DoctrineWriter;
+use Ddeboer\DataImport\Writer\ConsoleProgressWriter;
+use Symfony\Component\Console\Output\ConsoleOutput;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class CsvImportService
 {
@@ -19,11 +22,12 @@ class CsvImportService
     private $em;
     private $steps;
     private $skipped;
+    private $invalid;
+    private $testMode;
 
     const MINIMAL_COST = 5;
     const MINIMAL_STOCK = 10;
     const MAXIMAL_COST = 1000;
-    const ENV = 'DEV';
 
     /**
      * CsvImportService constructor.
@@ -32,6 +36,7 @@ class CsvImportService
     public function __construct(EntityManager $em)
     {
         $this->em = $em;
+        $this->invalid = [];
     }
 
     /**
@@ -41,6 +46,16 @@ class CsvImportService
     {
         $this->setResourceFile($filePath);
         $this->initializeWorkflow();
+    }
+
+    /**
+     * @param $mode
+     * @return $this
+     */
+    public function setTestMode($mode)
+    {
+        $this->testMode = $mode;
+        return $this;
     }
 
     /**
@@ -62,8 +77,7 @@ class CsvImportService
             $this->initializeReader();
             $this->skipped = $this->getSkippedItems($this->reader);
             $this->workflow = new StepAggregator($this->reader);
-            $this->writer = new DoctrineWriter($this->em, 'AppBundle:Product');
-            $this->workflow->addWriter($this->writer);
+            $this->initializeWriter();
             $this->steps = $this->getSteps();
             $this->initializeSteps();
         } catch (\Exception $e) {
@@ -78,6 +92,18 @@ class CsvImportService
         $this->reader->setColumnHeaders(['code', 'name',
             'description', 'stock', 'cost', 'discontinued', 'added', ]);
         $this->reader->setStrict(false);
+    }
+
+    private function initializeWriter()
+    {
+        if($this->testMode) {
+            $output = new ConsoleOutput();
+            $this->writer = new ConsoleProgressWriter($output, $this->reader);
+        }
+        else {
+            $this->writer = new DoctrineWriter($this->em, 'AppBundle:Product');
+        }
+        $this->workflow->addWriter($this->writer);
     }
 
     private function initializeSteps()
@@ -141,7 +167,7 @@ class CsvImportService
     {
         $itemsSkipped = $this->getSkippedItems($this->reader);
         $filter = function ($item) use ($itemsSkipped) {
-            return in_array($item['code'], $itemsSkipped) ? false : true;
+            return !in_array($item, $itemsSkipped);
         };
 
         return $filter;
@@ -150,7 +176,13 @@ class CsvImportService
     private function getValueFilter()
     {
         $filter = function($item) {
-            return strlen($item['stock']) > 0 && is_numeric($item['stock']) && strlen($item['cost']) > 0 && !is_numeric($item['discontinued']);
+            $condition = strlen($item['stock']) > 0 && is_numeric($item['stock'])
+                   && strlen($item['cost']) > 0 && is_numeric($item['cost'])
+                   && !is_numeric($item['discontinued']);
+            if(!$condition) {
+                array_push($this->invalid, $item);
+            }
+            return $condition;
         };
 
         return $filter;
@@ -161,6 +193,7 @@ class CsvImportService
         $uniqueCodes = [];
         $filter = function($item) use (&$uniqueCodes) {
             if(in_array($item['code'], $uniqueCodes)) {
+                array_push($this->invalid, $item);
                 return false;
             }
             else {
@@ -203,6 +236,10 @@ class CsvImportService
             [
                 'name' => '[cost]',
                 'converter' => $this->getCostConverter()
+            ],
+            [
+                'name' => '[stock]',
+                'converter' => $this->getStockConverter()
             ]
         ];
 
@@ -242,7 +279,6 @@ class CsvImportService
         $converter = function($input) {
             $matches = [];
             preg_match('!\d+\.*\d*!', $input ,$matches);
-            dump($matches);
             $cost = floatval(trim($matches[0]));
             return is_null($cost) ? null : $cost;
         };
@@ -251,13 +287,25 @@ class CsvImportService
     }
 
     /**
+     * @return \Closure
+     */
+    private function getStockConverter()
+    {
+        $converter = function($input) {
+            return $input;
+        };
+        return $converter;
+    }
+
+    /**
      * @param $item
      * @return bool
      */
-    /* WTF...O_o */
     private function rowFits($item)
     {
-        $falseCondition = ($item['cost'] < self::MINIMAL_COST && $item['stock'] < self::MINIMAL_STOCK) || $item['cost'] > self::MAXIMAL_COST;
+        $conditionA = floatval($item['cost']) < self::MINIMAL_COST && intval($item['stock']) < self::MINIMAL_STOCK;
+        $conditionB = floatval($item['cost']) > self::MAXIMAL_COST;
+        $falseCondition = $conditionA || $conditionB;
         return !$falseCondition;
     }
 
@@ -276,16 +324,40 @@ class CsvImportService
         return $skippedItems;
     }
 
-    public function testWrite()
+    private function logResult(OutputInterface $output, $description, $array)
     {
-        $this->workflow->setSkipItemOnFailure(false);
-        $this->workflow->process();
+        $output->writeln($description.': '.count($array));
+        foreach($array as $row) {
+            $output->writeln($row['code']);
+        }
     }
 
+    /**
+     * @param OutputInterface $output
+     * @return $this
+     */
+    public function logInvalidRows(OutputInterface $output)
+    {
+        $this->logResult($output, 'Rows, where type errors could occur', $this->invalid);
+        return $this;
+    }
+
+    /**
+     * @param OutputInterface $output
+     * @return $this
+     */
+    public function logSkippedRows(OutputInterface $output)
+    {
+        $this->logResult($output, 'Rows, which were skipped according to import rules', $this->skipped);
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
     public function importData()
     {
-        if (self::ENV === 'DEV') {
-            $this->testWrite();
-        }
+        $this->workflow->setSkipItemOnFailure(false);
+        return $this->workflow->process();
     }
 }

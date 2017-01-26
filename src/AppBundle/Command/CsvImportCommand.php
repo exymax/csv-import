@@ -22,7 +22,11 @@ class CsvImportCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $importService = $this->getContainer()->get('app.csv_import_service');
-        $importService->initializeImporter($input->getArgument('filename'));
-        $importService->importData();
+        $importService->setTestMode($input->getOption('testmode'))
+                      ->initializeImporter($input->getArgument('filename'));
+        $result = $importService->importData();
+        $output->writeln('Successfully imported '.$result->getSuccessCount().' rows');
+        $importService->logInvalidRows($output)
+                      ->logSkippedRows($output);
     }
 }
