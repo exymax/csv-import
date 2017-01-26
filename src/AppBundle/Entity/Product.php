@@ -88,7 +88,7 @@ class Product
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -111,7 +111,7 @@ class Product
     /**
      * Get intProductDataId
      *
-     * @return integer 
+     * @return integer
      */
     public function getIntProductDataId()
     {
@@ -134,7 +134,7 @@ class Product
     /**
      * Get strProductName
      *
-     * @return string 
+     * @return string
      */
     public function getStrProductName()
     {
@@ -157,7 +157,7 @@ class Product
     /**
      * Get strProductDesc
      *
-     * @return string 
+     * @return string
      */
     public function getStrProductDesc()
     {
@@ -180,7 +180,7 @@ class Product
     /**
      * Get strProductCode
      *
-     * @return string 
+     * @return string
      */
     public function getStrProductCode()
     {
@@ -203,7 +203,7 @@ class Product
     /**
      * Get dtmAdded
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getDtmAdded()
     {
@@ -226,7 +226,7 @@ class Product
     /**
      * Get dtmDiscontinued
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getDtmDiscontinued()
     {
@@ -249,7 +249,7 @@ class Product
     /**
      * Get stmTimestamp
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getStmTimestamp()
     {
@@ -272,7 +272,7 @@ class Product
     /**
      * Get intStockLevel
      *
-     * @return integer 
+     * @return integer
      */
     public function getIntStockLevel()
     {
@@ -295,7 +295,7 @@ class Product
     /**
      * Get floatPrice
      *
-     * @return float 
+     * @return float
      */
     public function getFloatPrice()
     {
