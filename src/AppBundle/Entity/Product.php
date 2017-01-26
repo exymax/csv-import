@@ -7,298 +7,239 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Product
  *
- * @ORM\Table(name="tblProductData")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\ProductRepository")
+ * @ORM\Table(name="product", uniqueConstraints={@ORM\UniqueConstraint(name="UNIQ_2C11248662F10A58", columns={"code"})})
+ * @ORM\Entity
  */
 class Product
 {
     /**
-     * @var int
+     * @var string
      *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(name="name", type="string", length=255, nullable=true)
      */
-    private $id;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="intProductDataId", type="integer", unique=true)
-     */
-    private $intProductDataId;
+    private $name;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="strProductName", type="string", length=255)
+     * @ORM\Column(name="code", type="string", length=255, nullable=true)
      */
-    private $strProductName;
+    private $code;
 
     /**
-     * @var string
+     * @var integer
      *
-     * @ORM\Column(name="strProductDesc", type="string", length=512)
+     * @ORM\Column(name="stock", type="integer", nullable=true)
      */
-    private $strProductDesc;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="strProductCode", type="string", length=255, unique=true)
-     */
-    private $strProductCode;
+    private $stock;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="dtmAdded", type="datetime")
+     * @ORM\Column(name="added", type="datetime", nullable=true)
      */
-    private $dtmAdded;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="dtmDiscounted", type="datetime")
-     */
-    private $dtmDiscontinued;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="stmTimestamp", type="time")
-     */
-    private $stmTimestamp;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="intStockLevel", type="integer")
-     */
-    private $intStockLevel;
+    private $added;
 
     /**
      * @var float
      *
-     * @ORM\Column(name="floatPrice", type="float")
+     * @ORM\Column(name="cost", type="float", precision=10, scale=0, nullable=true)
      */
-    private $floatPrice;
+    private $cost;
 
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="discontinued", type="datetime", nullable=true)
+     */
+    private $discontinued;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="description", type="string", length=512, nullable=true)
+     */
+    private $description;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+
+
+    /**
+     * Set name
+     *
+     * @param string $name
+     * @return Product
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string 
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Set code
+     *
+     * @param string $code
+     * @return Product
+     */
+    public function setCode($code)
+    {
+        $this->code = $code;
+
+        return $this;
+    }
+
+    /**
+     * Get code
+     *
+     * @return string 
+     */
+    public function getCode()
+    {
+        return $this->code;
+    }
+
+    /**
+     * Set stock
+     *
+     * @param integer $stock
+     * @return Product
+     */
+    public function setStock($stock)
+    {
+        $this->stock = $stock;
+
+        return $this;
+    }
+
+    /**
+     * Get stock
+     *
+     * @return integer 
+     */
+    public function getStock()
+    {
+        return $this->stock;
+    }
+
+    /**
+     * Set added
+     *
+     * @param \DateTime $added
+     * @return Product
+     */
+    public function setAdded($added)
+    {
+        $this->added = $added;
+
+        return $this;
+    }
+
+    /**
+     * Get added
+     *
+     * @return \DateTime 
+     */
+    public function getAdded()
+    {
+        return $this->added;
+    }
+
+    /**
+     * Set cost
+     *
+     * @param float $cost
+     * @return Product
+     */
+    public function setCost($cost)
+    {
+        $this->cost = $cost;
+
+        return $this;
+    }
+
+    /**
+     * Get cost
+     *
+     * @return float 
+     */
+    public function getCost()
+    {
+        return $this->cost;
+    }
+
+    /**
+     * Set discontinued
+     *
+     * @param \DateTime $discontinued
+     * @return Product
+     */
+    public function setDiscontinued($discontinued)
+    {
+        $this->discontinued = $discontinued;
+
+        return $this;
+    }
+
+    /**
+     * Get discontinued
+     *
+     * @return \DateTime 
+     */
+    public function getDiscontinued()
+    {
+        return $this->discontinued;
+    }
+
+    /**
+     * Set description
+     *
+     * @param string $description
+     * @return Product
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Get description
+     *
+     * @return string 
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
 
     /**
      * Get id
      *
-     * @return integer
+     * @return integer 
      */
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set intProductDataId
-     *
-     * @param integer $intProductDataId
-     * @return Product
-     */
-    public function setIntProductDataId($intProductDataId)
-    {
-        $this->intProductDataId = $intProductDataId;
-
-        return $this;
-    }
-
-    /**
-     * Get intProductDataId
-     *
-     * @return integer
-     */
-    public function getIntProductDataId()
-    {
-        return $this->intProductDataId;
-    }
-
-    /**
-     * Set strProductName
-     *
-     * @param string $strProductName
-     * @return Product
-     */
-    public function setStrProductName($strProductName)
-    {
-        $this->strProductName = $strProductName;
-
-        return $this;
-    }
-
-    /**
-     * Get strProductName
-     *
-     * @return string
-     */
-    public function getStrProductName()
-    {
-        return $this->strProductName;
-    }
-
-    /**
-     * Set strProductDesc
-     *
-     * @param string $strProductDesc
-     * @return Product
-     */
-    public function setStrProductDesc($strProductDesc)
-    {
-        $this->strProductDesc = $strProductDesc;
-
-        return $this;
-    }
-
-    /**
-     * Get strProductDesc
-     *
-     * @return string
-     */
-    public function getStrProductDesc()
-    {
-        return $this->strProductDesc;
-    }
-
-    /**
-     * Set strProductCode
-     *
-     * @param string $strProductCode
-     * @return Product
-     */
-    public function setStrProductCode($strProductCode)
-    {
-        $this->strProductCode = $strProductCode;
-
-        return $this;
-    }
-
-    /**
-     * Get strProductCode
-     *
-     * @return string
-     */
-    public function getStrProductCode()
-    {
-        return $this->strProductCode;
-    }
-
-    /**
-     * Set dtmAdded
-     *
-     * @param \DateTime $dtmAdded
-     * @return Product
-     */
-    public function setDtmAdded($dtmAdded)
-    {
-        $this->dtmAdded = $dtmAdded;
-
-        return $this;
-    }
-
-    /**
-     * Get dtmAdded
-     *
-     * @return \DateTime
-     */
-    public function getDtmAdded()
-    {
-        return $this->dtmAdded;
-    }
-
-    /**
-     * Set dtmDiscounted
-     *
-     * @param \DateTime $dtmDiscontinued
-     * @return Product
-     */
-    public function setDtmDiscontinued($dtmDiscontinued)
-    {
-        $this->dtmDiscontinued = $dtmDiscontinued;
-
-        return $this;
-    }
-
-    /**
-     * Get dtmDiscontinued
-     *
-     * @return \DateTime
-     */
-    public function getDtmDiscontinued()
-    {
-        return $this->dtmDiscontinued;
-    }
-
-    /**
-     * Set stmTimestamp
-     *
-     * @param \DateTime $stmTimestamp
-     * @return Product
-     */
-    public function setStmTimestamp($stmTimestamp)
-    {
-        $this->stmTimestamp = $stmTimestamp;
-
-        return $this;
-    }
-
-    /**
-     * Get stmTimestamp
-     *
-     * @return \DateTime
-     */
-    public function getStmTimestamp()
-    {
-        return $this->stmTimestamp;
-    }
-
-    /**
-     * Set intStockLevel
-     *
-     * @param integer $intStockLevel
-     * @return Product
-     */
-    public function setIntStockLevel($intStockLevel)
-    {
-        $this->intStockLevel = $intStockLevel;
-
-        return $this;
-    }
-
-    /**
-     * Get intStockLevel
-     *
-     * @return integer
-     */
-    public function getIntStockLevel()
-    {
-        return $this->intStockLevel;
-    }
-
-    /**
-     * Set floatPrice
-     *
-     * @param float $floatPrice
-     * @return Product
-     */
-    public function setFloatPrice($floatPrice)
-    {
-        $this->floatPrice = $floatPrice;
-
-        return $this;
-    }
-
-    /**
-     * Get floatPrice
-     *
-     * @return float
-     */
-    public function getFloatPrice()
-    {
-        return $this->floatPrice;
     }
 }

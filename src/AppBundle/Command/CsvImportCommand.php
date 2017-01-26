@@ -23,10 +23,6 @@ class CsvImportCommand extends ContainerAwareCommand
     {
         $importService = $this->getContainer()->get('app.csv_import_service');
         $importService->initializeImporter($input->getArgument('filename'));
-        $output->writeln('===============');
-        $output->writeln('Hello, %username%.');
-        $output->writeln('===============');
-        $output->writeln('Please, do something that makes sense. Good luck and may the force be with you!');
-        $importService->importData($output);
+        $importService->importData();
     }
 }
