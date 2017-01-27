@@ -5,12 +5,11 @@ namespace AppBundle\Service;
 use Ddeboer\DataImport\Step\ConverterStep;
 use Ddeboer\DataImport\Step\FilterStep;
 use Ddeboer\DataImport\Step\ValueConverterStep;
+use Ddeboer\DataImport\Writer\CallbackWriter;
 use Doctrine\ORM\EntityManager;
 use Ddeboer\DataImport\Workflow\StepAggregator;
 use Ddeboer\DataImport\Reader\CsvReader;
 use Ddeboer\DataImport\Writer\DoctrineWriter;
-use Ddeboer\DataImport\Writer\ConsoleProgressWriter;
-use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 class CsvImportService
@@ -43,15 +42,6 @@ class CsvImportService
         $this->loggingField = 'code';
     }
 
-    /**
-     * @param $filePath
-     */
-    public function initializeImporter($filePath)
-    {
-        $this->setResourceFile($filePath);
-        $this->initializeWorkflow();
-    }
-
     /** Enables "test" mode: data is processed in the same way, but not inserted into a database
      * @param $mode
      * @return $this
@@ -60,6 +50,15 @@ class CsvImportService
     {
         $this->testMode = $mode;
         return $this;
+    }
+
+    /**
+     * @param $filePath
+     */
+    public function initializeImporter($filePath)
+    {
+        $this->setResourceFile($filePath);
+        $this->initializeWorkflow();
     }
 
     /** Sets the data source .csv file
@@ -101,8 +100,7 @@ class CsvImportService
     private function initializeWriter()
     {
         if ($this->testMode) {
-            $output = new ConsoleOutput();
-            $this->writer = new ConsoleProgressWriter($output, $this->reader);
+            $this->writer = new CallbackWriter(function ($row) {});
         } else {
             $this->writer = new DoctrineWriter($this->em, 'AppBundle:Product');
         }
