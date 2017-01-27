@@ -110,7 +110,7 @@ class CsvImportServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetMainFilter($result, $item)
     {
-        $data = array_map(function($item) {
+        $data = array_map(function ($item) {
             return $item[1];
         }, $this->mainFilterProvider());
         $filter = $this->service->getMainFilter($data);
@@ -180,5 +180,89 @@ class CsvImportServiceTest extends \PHPUnit_Framework_TestCase
         $filter = $this->service->getDuplicateFilter();
         $this->assertEquals(true, $filter($data));
         $this->assertEquals(false, $filter($data));
+    }
+
+    /*Testing converters*/
+    // discontinued, added, cost, stock
+    public function discontinuedConverterProvider()
+    {
+        return [
+            [new \DateTime(), 'yes'],
+            [null, '']
+        ];
+    }
+
+    /**
+     * @dataProvider discontinuedConverterProvider
+     * @param $result
+     * @param $input
+     */
+    public function testGetDiscontinuedConverter($result, $input)
+    {
+        $converter = $this->service->getDiscontinuedConverter();
+        $this->assertEquals($result, $converter($input));
+    }
+
+    public function addedConverterProvider()
+    {
+        return [
+            [new \DateTime(), null],
+            [null, 'abcdef'],
+            [null, 164]
+        ];
+    }
+
+    /**
+     * @dataProvider addedConverterProvider
+     * @param $result
+     * @param $input
+     */
+    public function testGetAddedConverter($result, $input)
+    {
+        $converter = $this->service->getAddedConverter();
+        $this->assertEquals($result, $converter($input));
+    }
+
+    public function costConverterProvider()
+    {
+        return [
+            [
+                123, '$123',
+                456.78, '456.78',
+                12.25, '12.250'
+            ]
+        ];
+    }
+
+    /**
+     * @dataProvider costConverterProvider
+     * @param $result
+     * @param $input
+     */
+    public function testGetCostConverter($result, $input)
+    {
+        $converter = $this->service->getCostConverter();
+        $this->assertEquals($result, $converter($input));
+    }
+
+    public function stockConverterProvider()
+    {
+        return [
+            [ null, '' ],
+            [ 25, '25' ],
+            [ 5, '5aa' ],
+            [ 0, 'aa155bcv' ],
+        ];
+    }
+
+    /**
+     * @dataProvider stockConverterProvider
+     * @param $result
+     * @param $input
+     */
+    public function testGetStockConverter($result, $input)
+    {
+        $converter = $this->service->getStockConverter();
+        $this->assertEquals($result, $converter($input));
     }
 }
