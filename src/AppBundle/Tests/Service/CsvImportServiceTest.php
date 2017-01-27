@@ -13,16 +13,17 @@ class CsvImportServiceTest extends \PHPUnit_Framework_TestCase
 
     const FILENAME = '../stock.csv';
 
-    public function __construct()
+    public function __construct($name = NULL, array $data = [], $dataName = '')
     {
         $this->service = $this->getServiceObject();
+        parent::__construct($name, $data, $dataName);
     }
 
     protected function getEntityManager()
     {
         $emMock = $this->getMockBuilder(EntityManager::class)
-                  ->disableOriginalConstructor()
-                  ->getMock();
+            ->disableOriginalConstructor()
+            ->getMock();
         return $emMock;
     }
 
@@ -69,7 +70,7 @@ class CsvImportServiceTest extends \PHPUnit_Framework_TestCase
         // $passes is an array with skipped items
         $passed = ['P0027', 'P001'];
 
-        $mappingFunction = function($item) {
+        $mappingFunction = function ($item) {
             return $item['code'];
         };
 
@@ -80,63 +81,104 @@ class CsvImportServiceTest extends \PHPUnit_Framework_TestCase
 
     /*Testing filters*/
 
-    // Checks if filter deny rows in $skippedItems array
-    public function testGetMainFilter()
+    public function mainFilterProvider()
     {
-        $itemsToFilter = [
+        return [
             [
-                'code' => 'P001',
-                'cost' => '12',
-                'stock' => '6'
+                true,
+                [
+                    'code' => 'P001',
+                    'cost' => '12',
+                    'stock' => '6'
+                ]
             ],
             [
-                'code' => 'P0035',
-                'cost' => '1200',
-                'stock' => '55'
+                false,
+                [
+                    'code' => 'P0035',
+                    'cost' => '1200',
+                    'stock' => '55'
+                ]
             ]
         ];
-        $filter = $this->service->getMainFilter($itemsToFilter);
-        $this->assertEquals(true, $filter($itemsToFilter[0]));
-        $this->assertEquals(false, $filter($itemsToFilter[1]));
     }
 
-    public function testGetValueFilter()
+    /** Checks if filter denies rows in $skippedItems array
+     * @dataProvider mainFilterProvider
+     * @param $result
+     * @param $item
+     */
+    public function testGetMainFilter($result, $item)
     {
-        $itemsToFilter = [
+        $data = array_map(function($item) {
+            return $item[1];
+        }, $this->mainFilterProvider());
+        $filter = $this->service->getMainFilter($data);
+        $this->assertEquals($result, $filter($item));
+    }
+
+    public function valueFilterProvider()
+    {
+        return [
             [
-                'code' => 'P001',
-                'cost' => 'wtf man',
-                'stock' => '42',
-                'discontinued' => 'yes'
+                false,
+                [
+                    'code' => 'P001',
+                    'cost' => 'wtf man',
+                    'stock' => '42',
+                    'discontinued' => 'yes'
+                ]
             ],
             [
-                'code' => 'P0013',
-                'cost' => '452.13',
-                'stock' => 'bang bang',
-                'discontinued' => ''
+                false,
+                [
+                    'code' => 'P0013',
+                    'cost' => '452.13',
+                    'stock' => 'bang bang',
+                    'discontinued' => ''
+                ]
             ],
             [
-                'code' => 'P0011',
-                'cost' => '782.9',
-                'stock' => '42',
-                'discontinued' => '1234'
+                false,
+                [
+                    'code' => 'P0011',
+                    'cost' => '782.9',
+                    'stock' => '42',
+                    'discontinued' => '1234'
+                ]
             ],
             [
-                'code' => 'P0024',
-                'cost' => '452.13',
-                'stock' => '97',
-                'discontinued' => 'yes'
+                true,
+                [
+                    'code' => 'P0024',
+                    'cost' => '452.13',
+                    'stock' => '97',
+                    'discontinued' => 'yes'
+                ]
             ]
         ];
+    }
+
+
+    /** Checks if filter denies rows, which have invalid field values
+     * @dataProvider valueFilterProvider
+     * @param $result
+     * @param $item
+     */
+    public function testGetValueFilter($result, $item)
+    {
         $filter = $this->service->getValueFilter();
-
-        $this->assertEquals(false, $filter($itemsToFilter[0]));
-        $this->assertEquals(false, $filter($itemsToFilter[1]));
-        $this->assertEquals(false, $filter($itemsToFilter[2]));
-        $this->assertEquals(true, $filter($itemsToFilter[3]));
-
+        $this->assertEquals($result, $filter($item));
     }
 
-    /*Testing converters*/
-
+    // Checks if filter denies duplicate rows
+    public function testGetDuplicateFilter()
+    {
+        $data = [
+            'code' => 'P0015'
+        ];
+        $filter = $this->service->getDuplicateFilter();
+        $this->assertEquals(true, $filter($data));
+        $this->assertEquals(false, $filter($data));
+    }
 }

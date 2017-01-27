@@ -198,7 +198,7 @@ class CsvImportService
     /** Returns duplicate filter, which accepts only rows with unique 'code' field
      * @return \Closure
      */
-    private function getDuplicateFilter()
+    public function getDuplicateFilter()
     {
         $uniqueCodes = [];
         $filter = function ($row) use (&$uniqueCodes) {
@@ -258,7 +258,7 @@ class CsvImportService
     /** Returns converter, which turns discontinued field(they contain 'yes') to the current time
      * @return \Closure
      */
-    private function getDiscontinuedConverter()
+    public function getDiscontinuedConverter()
     {
         $converter = function ($input) {
             if ($input === 'yes') {
@@ -274,7 +274,7 @@ class CsvImportService
     /** Returns converter, which turns 'added' fields with null value to the current time, else turns to null
      * @return \Closure
      */
-    private function getAddedConverter()
+    public function getAddedConverter()
     {
         $converter = function ($input) {
             return (is_null($input)) ? new \DateTime() : null;
@@ -285,7 +285,7 @@ class CsvImportService
     /** Returns converter, which extracts a float number from the input 'cost' string field
      * @return \Closure
      */
-    private function getCostConverter()
+    public function getCostConverter()
     {
         $converter = function ($input) {
             $matches = [];
@@ -299,7 +299,7 @@ class CsvImportService
     /** Returns converter, which extracts an integer number from the input 'stock' string field
      * @return \Closure
      */
-    private function getStockConverter()
+    public function getStockConverter()
     {
         $converter = function ($input) {
             return (strlen($input) > 0) ? intval($input, 10) : null;
