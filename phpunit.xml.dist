@@ -1,0 +1,7 @@
+<phpunit bootstrap="app/autoload.php">
+    <testsuites>
+        <testsuite>
+            <file>src/AppBundle/Tests/Service/CsvImportServiceTest</file>
+        </testsuite>
+    </testsuites>
+</phpunit>

@@ -11,7 +11,6 @@ use Ddeboer\DataImport\Reader\CsvReader;
 use Ddeboer\DataImport\Writer\DoctrineWriter;
 use Ddeboer\DataImport\Writer\ConsoleProgressWriter;
 use Symfony\Component\Console\Output\ConsoleOutput;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 class CsvImportService
@@ -26,10 +25,11 @@ class CsvImportService
     private $invalid;
     private $testMode;
     private $loggingField;
+    private $consoleInterface;
 
     const MINIMAL_COST = 5;
-    const MINIMAL_STOCK = 10;
     const MAXIMAL_COST = 1000;
+    const MINIMAL_STOCK = 10;
     const FIELDS = ['code', 'name', 'description', 'stock', 'cost', 'discontinued', 'added', ];
 
     /**
@@ -52,7 +52,7 @@ class CsvImportService
         $this->initializeWorkflow();
     }
 
-    /**
+    /** Enables "test" mode: data is processed in the same way, but not inserted into a database
      * @param $mode
      * @return $this
      */
@@ -62,7 +62,7 @@ class CsvImportService
         return $this;
     }
 
-    /**
+    /** Sets the data source .csv file
      * @param $filePath
      * @throws \Exception
      */
@@ -75,11 +75,12 @@ class CsvImportService
         $this->file = new \SplFileObject($filePath);
     }
 
+    // Initializes importer workflow(source reader, database writer and steps of processing: filtering, conversion, etc.)
     private function initializeWorkflow()
     {
         try {
             $this->initializeReader();
-            $this->skipped = $this->getSkippedItems($this->reader);
+            $this->skipped = $this->getSkippedRows($this->reader);
             $this->workflow = new StepAggregator($this->reader);
             $this->initializeWriter();
             $this->steps = $this->getSteps();
@@ -114,7 +115,7 @@ class CsvImportService
         $this->bindStepsToWorkflow($this->steps);
     }
 
-    /**
+    /** Returns workflow steps
      * @return array
      */
     private function getSteps()
@@ -136,7 +137,7 @@ class CsvImportService
         }
     }
 
-    /**
+    /** Returns filter step according to needle filters
      * @return FilterStep
      */
     private function getFilterStep()
@@ -149,13 +150,13 @@ class CsvImportService
         return $step;
     }
 
-    /**
+    /** Returns data filters
      * @return array
      */
     private function getFilters()
     {
         $filters = [
-            $this->getConditionalFilter(),
+            $this->getMainFilter($this->reader),
             $this->getValueFilter(),
             $this->getDuplicateFilter(),
         ];
@@ -163,26 +164,30 @@ class CsvImportService
     }
 
     /**
+     * @param $reader
      * @return \Closure
      */
-    private function getConditionalFilter()
+    public function getMainFilter($reader)
     {
-        $itemsSkipped = $this->getSkippedItems($this->reader);
-        $filter = function ($item) use ($itemsSkipped) {
-            return !in_array($item, $itemsSkipped);
+        $rowsSkipped = $this->getSkippedRows($reader);
+        $filter = function ($row) use ($rowsSkipped) {
+            return !in_array($row, $rowsSkipped);
         };
 
         return $filter;
     }
 
-    private function getValueFilter()
+    /** Returns value filter, which allows only rows with correct data
+     * @return \Closure
+     */
+    public function getValueFilter()
     {
-        $filter = function ($item) {
-            $condition = strlen($item['stock']) > 0 && is_numeric($item['stock'])
-                   && strlen($item['cost']) > 0 && is_numeric($item['cost'])
-                   && !is_numeric($item['discontinued']);
+        $filter = function ($row) {
+            $condition = strlen($row['stock']) > 0 && is_numeric($row['stock'])
+                   && strlen($row['cost']) > 0 && is_numeric($row['cost'])
+                   && !is_numeric($row['discontinued']);
             if (!$condition) {
-                array_push($this->invalid, $item);
+                array_push($this->invalid, $row);
             }
             return $condition;
         };
@@ -190,15 +195,18 @@ class CsvImportService
         return $filter;
     }
 
+    /** Returns duplicate filter, which accepts only rows with unique 'code' field
+     * @return \Closure
+     */
     private function getDuplicateFilter()
     {
         $uniqueCodes = [];
-        $filter = function ($item) use (&$uniqueCodes) {
-            if (in_array($item['code'], $uniqueCodes)) {
-                array_push($this->invalid, $item);
+        $filter = function ($row) use (&$uniqueCodes) {
+            if (in_array($row['code'], $uniqueCodes)) {
+                array_push($this->invalid, $row);
                 return false;
             } else {
-                array_push($uniqueCodes, $item['code']);
+                array_push($uniqueCodes, $row['code']);
                 return true;
             }
         };
@@ -206,20 +214,20 @@ class CsvImportService
         return $filter;
     }
 
-    /**
+    /** Returns converter step according to needle converters
      * @return ConverterStep
      */
     private function getConvertStep()
     {
         $step = new ValueConverterStep();
         $convertersHolder = $this->getConvertersHolder();
-        foreach ($convertersHolder as $holderItem) {
-            $step->add($holderItem['name'], $holderItem['converter']);
+        foreach ($convertersHolder as $holderRow) {
+            $step->add($holderRow['name'], $holderRow['converter']);
         }
         return $step;
     }
 
-    /**
+    /** Returns array 'holder' of filters. Created for a better incapsulation
      * @return array
      *
      */
@@ -247,7 +255,7 @@ class CsvImportService
         return $converters;
     }
 
-    /**
+    /** Returns converter, which turns discontinued field(they contain 'yes') to the current time
      * @return \Closure
      */
     private function getDiscontinuedConverter()
@@ -263,7 +271,7 @@ class CsvImportService
         return $converter;
     }
 
-    /**
+    /** Returns converter, which turns 'added' fields with null value to the current time, else turns to null
      * @return \Closure
      */
     private function getAddedConverter()
@@ -274,6 +282,9 @@ class CsvImportService
         return $converter;
     }
 
+    /** Returns converter, which extracts a float number from the input 'cost' string field
+     * @return \Closure
+     */
     private function getCostConverter()
     {
         $converter = function ($input) {
@@ -285,45 +296,45 @@ class CsvImportService
         return $converter;
     }
 
-    /**
+    /** Returns converter, which extracts an integer number from the input 'stock' string field
      * @return \Closure
      */
     private function getStockConverter()
     {
         $converter = function ($input) {
-            return $input;
+            return (strlen($input) > 0) ? intval($input, 10) : null;
         };
         return $converter;
     }
 
-    /**
-     * @param $item
+    /** Checks, if the row accepts import rules
+     * @param $row
      * @return bool
      */
-    private function rowFits($item)
+    private function rowFits($row)
     {
-        $conditionA = floatval($item['cost']) < self::MINIMAL_COST && intval($item['stock']) < self::MINIMAL_STOCK;
-        $conditionB = floatval($item['cost']) > self::MAXIMAL_COST;
+        $conditionA = floatval($row['cost']) < self::MINIMAL_COST && intval($row['stock']) < self::MINIMAL_STOCK;
+        $conditionB = floatval($row['cost']) > self::MAXIMAL_COST;
         $falseCondition = $conditionA || $conditionB;
         return !$falseCondition;
     }
 
-    /**
+    /** Returns rows, which will not be imported according to import rules
      * @param $reader
      * @return array
      */
-    private function getSkippedItems($reader)
+    public function getSkippedRows($reader)
     {
-        $skippedItems = [];
-        foreach ($reader as $item) {
-            if (!$this->rowFits($item)) {
-                array_push($skippedItems, $item);
+        $skippedRows = [];
+        foreach ($reader as $row) {
+            if (!$this->rowFits($row)) {
+                array_push($skippedRows, $row);
             }
         }
-        return $skippedItems;
+        return $skippedRows;
     }
 
-    /**
+    /** An optional helper method to set the field, by which console will reflect not imported rows in the output
      * @param $field
      */
     public function setLoggingField($field)
@@ -331,42 +342,59 @@ class CsvImportService
         $this->loggingField = in_array($field, self::FIELDS) ? $field : 'code';
     }
 
-    /**
+    /** A helper method, which sets the SymfonyStyle object to beautify the output
+     * @param SymfonyStyle $io
+     * @return $this
+     */
+    public function setConsoleInterface(SymfonyStyle $io)
+    {
+        $this->consoleInterface = $io;
+        return $this;
+    }
+
+    /** An 'abstract' method, which defines behaviour of helper logging methods
      * @param SymfonyStyle $io
      * @param $description
      * @param $array
      */
-    private function logResult(SymfonyStyle $io, $description, $array)
+    private function logResult($description, $array, $io = null)
     {
-        $mappingFunction = function ($item) {
-            return $item[$this->loggingField];
+        $interface = $io ? $io : $this->consoleInterface;
+        $mappingFunction = function ($row) {
+            return $row[$this->loggingField];
         };
         $transformedRows = array_map($mappingFunction, $array);
-        $io->writeln($description.': '.count($array));
-        $io->listing($transformedRows);
+        $interface->writeln($description.': '.count($array));
+        $interface->listing($transformedRows);
     }
 
-    /**
+    /** A helper logging method for rows, which may contain incompatible types
      * @param SymfonyStyle $io
      * @return $this
      */
-    public function logInvalidRows(SymfonyStyle $io)
+    public function logInvalidRows(SymfonyStyle $io = null)
     {
-        $this->logResult($io, 'Rows, where type errors could occur', $this->invalid);
+        $this->logResult('Rows, where type errors could occur', $this->invalid, $io);
         return $this;
     }
 
-    /**
+    /** A helper logging method for rows, which are not imported according to import rules
      * @param SymfonyStyle $io
      * @return $this
      */
-    public function logSkippedRows(SymfonyStyle $io)
+    public function logSkippedRows(SymfonyStyle $io = null)
     {
-        $this->logResult($io, 'Rows, which were skipped according to import rules', $this->skipped);
+        $this->logResult('Rows, which were skipped according to import rules', $this->skipped, $io);
         return $this;
     }
 
-    /**
+    public function getTotalRowsCount()
+    {
+        $number = count($this->reader);
+        return $number;
+    }
+
+    /** The main method, which starts the process of importing.
      * @return mixed
      */
     public function importData()

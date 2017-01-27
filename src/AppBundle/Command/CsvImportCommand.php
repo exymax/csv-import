@@ -17,24 +17,25 @@ class CsvImportCommand extends ContainerAwareCommand
              ->setDescription('Simple console command that imports .csv data into mysql')
              ->setHelp('Uhhh, just fuck off');
         $this->addArgument('filename', InputArgument::REQUIRED, 'Specify the file you want to import');
-        $this->addOption('testmode', 'test', InputOption::VALUE_NONE)
-             ->addOption('logfield', 'field', InputOption::VALUE_OPTIONAL, 'code');
+        $this->addOption('test-mode', 'test', InputOption::VALUE_NONE)
+             ->addOption('log-field', 'field', InputOption::VALUE_OPTIONAL, 'code');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $io = new SymfonyStyle($input, $output);
-        $io->title("Hey, wazzup?");
+        $io->title("Hey, wazzup? Welcome to csv-importer!");
         $io->section('Importing '.$input->getArgument('filename').' into the database...');
         $importService = $this->getContainer()->get('app.csv_import_service');
-        $importService->setLoggingField($input->getOption('logfield'));
-        $importService->setTestMode($input->getOption('testmode'))
+        $importService->setLoggingField($input->getOption('log-field'));
+        $importService->setTestMode($input->getOption('test-mode'))
                       ->initializeImporter($input->getArgument('filename'));
         $result = $importService->importData();
         $io->newLine();
         $io->success('Done!');
-        $output->writeln('Successfully imported '.$result->getSuccessCount().' rows');
-        $importService->logInvalidRows($io)
-                      ->logSkippedRows($io);
+        $io->section('Successfully imported '.$result->getSuccessCount().' of '.$importService->getTotalRowsCount().' rows');
+        $importService->setConsoleInterface($io)
+                      ->logInvalidRows()
+                      ->logSkippedRows();
     }
 }
