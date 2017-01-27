@@ -30,7 +30,7 @@ class CsvImportService
     const MINIMAL_COST = 5;
     const MINIMAL_STOCK = 10;
     const MAXIMAL_COST = 1000;
-    CONST FIELDS = ['code', 'name', 'description', 'stock', 'cost', 'discontinued', 'added', ];
+    const FIELDS = ['code', 'name', 'description', 'stock', 'cost', 'discontinued', 'added', ];
 
     /**
      * CsvImportService constructor.
@@ -99,11 +99,10 @@ class CsvImportService
 
     private function initializeWriter()
     {
-        if($this->testMode) {
+        if ($this->testMode) {
             $output = new ConsoleOutput();
             $this->writer = new ConsoleProgressWriter($output, $this->reader);
-        }
-        else {
+        } else {
             $this->writer = new DoctrineWriter($this->em, 'AppBundle:Product');
         }
         $this->workflow->addWriter($this->writer);
@@ -178,11 +177,11 @@ class CsvImportService
 
     private function getValueFilter()
     {
-        $filter = function($item) {
+        $filter = function ($item) {
             $condition = strlen($item['stock']) > 0 && is_numeric($item['stock'])
                    && strlen($item['cost']) > 0 && is_numeric($item['cost'])
                    && !is_numeric($item['discontinued']);
-            if(!$condition) {
+            if (!$condition) {
                 array_push($this->invalid, $item);
             }
             return $condition;
@@ -194,12 +193,11 @@ class CsvImportService
     private function getDuplicateFilter()
     {
         $uniqueCodes = [];
-        $filter = function($item) use (&$uniqueCodes) {
-            if(in_array($item['code'], $uniqueCodes)) {
+        $filter = function ($item) use (&$uniqueCodes) {
+            if (in_array($item['code'], $uniqueCodes)) {
                 array_push($this->invalid, $item);
                 return false;
-            }
-            else {
+            } else {
                 array_push($uniqueCodes, $item['code']);
                 return true;
             }
@@ -215,7 +213,7 @@ class CsvImportService
     {
         $step = new ValueConverterStep();
         $convertersHolder = $this->getConvertersHolder();
-        foreach($convertersHolder as $holderItem) {
+        foreach ($convertersHolder as $holderItem) {
             $step->add($holderItem['name'], $holderItem['converter']);
         }
         return $step;
@@ -254,11 +252,10 @@ class CsvImportService
      */
     private function getDiscontinuedConverter()
     {
-        $converter = function($input) {
-            if($input === 'yes') {
+        $converter = function ($input) {
+            if ($input === 'yes') {
                 return new \DateTime();
-            }
-            else {
+            } else {
                 return null;
             }
         };
@@ -271,7 +268,7 @@ class CsvImportService
      */
     private function getAddedConverter()
     {
-        $converter = function($input) {
+        $converter = function ($input) {
             return (is_null($input)) ? new \DateTime() : null;
         };
         return $converter;
@@ -279,13 +276,12 @@ class CsvImportService
 
     private function getCostConverter()
     {
-        $converter = function($input) {
+        $converter = function ($input) {
             $matches = [];
-            preg_match('!\d+\.*\d*!', $input ,$matches);
+            preg_match('!\d+\.*\d*!', $input, $matches);
             $cost = floatval(trim($matches[0]));
             return is_null($cost) ? null : $cost;
         };
-
         return $converter;
     }
 
@@ -294,7 +290,7 @@ class CsvImportService
      */
     private function getStockConverter()
     {
-        $converter = function($input) {
+        $converter = function ($input) {
             return $input;
         };
         return $converter;
@@ -342,7 +338,7 @@ class CsvImportService
      */
     private function logResult(SymfonyStyle $io, $description, $array)
     {
-        $mappingFunction = function($item) {
+        $mappingFunction = function ($item) {
             return $item[$this->loggingField];
         };
         $transformedRows = array_map($mappingFunction, $array);

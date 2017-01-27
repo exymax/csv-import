@@ -88,7 +88,7 @@ class Product
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -111,7 +111,7 @@ class Product
     /**
      * Get code
      *
-     * @return string 
+     * @return string
      */
     public function getCode()
     {
@@ -134,7 +134,7 @@ class Product
     /**
      * Get stock
      *
-     * @return integer 
+     * @return integer
      */
     public function getStock()
     {
@@ -157,7 +157,7 @@ class Product
     /**
      * Get added
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getAdded()
     {
@@ -180,7 +180,7 @@ class Product
     /**
      * Get cost
      *
-     * @return float 
+     * @return float
      */
     public function getCost()
     {
@@ -203,7 +203,7 @@ class Product
     /**
      * Get discontinued
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getDiscontinued()
     {
@@ -226,7 +226,7 @@ class Product
     /**
      * Get description
      *
-     * @return string 
+     * @return string
      */
     public function getDescription()
     {
@@ -236,7 +236,7 @@ class Product
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
