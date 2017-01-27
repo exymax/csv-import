@@ -12,6 +12,7 @@ use Ddeboer\DataImport\Writer\DoctrineWriter;
 use Ddeboer\DataImport\Writer\ConsoleProgressWriter;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 class CsvImportService
 {
@@ -24,10 +25,12 @@ class CsvImportService
     private $skipped;
     private $invalid;
     private $testMode;
+    private $loggingField;
 
     const MINIMAL_COST = 5;
     const MINIMAL_STOCK = 10;
     const MAXIMAL_COST = 1000;
+    CONST FIELDS = ['code', 'name', 'description', 'stock', 'cost', 'discontinued', 'added', ];
 
     /**
      * CsvImportService constructor.
@@ -37,6 +40,7 @@ class CsvImportService
     {
         $this->em = $em;
         $this->invalid = [];
+        $this->loggingField = 'code';
     }
 
     /**
@@ -89,8 +93,7 @@ class CsvImportService
     {
         $this->reader = new CsvReader($this->file);
         $this->reader->setHeaderRowNumber(0);
-        $this->reader->setColumnHeaders(['code', 'name',
-            'description', 'stock', 'cost', 'discontinued', 'added', ]);
+        $this->reader->setColumnHeaders(self::FIELDS);
         $this->reader->setStrict(false);
     }
 
@@ -324,31 +327,46 @@ class CsvImportService
         return $skippedItems;
     }
 
-    private function logResult(OutputInterface $output, $description, $array)
+    /**
+     * @param $field
+     */
+    public function setLoggingField($field)
     {
-        $output->writeln($description.': '.count($array));
-        foreach($array as $row) {
-            $output->writeln($row['code']);
-        }
+        $this->loggingField = in_array($field, self::FIELDS) ? $field : 'code';
     }
 
     /**
-     * @param OutputInterface $output
+     * @param SymfonyStyle $io
+     * @param $description
+     * @param $array
+     */
+    private function logResult(SymfonyStyle $io, $description, $array)
+    {
+        $mappingFunction = function($item) {
+            return $item[$this->loggingField];
+        };
+        $transformedRows = array_map($mappingFunction, $array);
+        $io->writeln($description.': '.count($array));
+        $io->listing($transformedRows);
+    }
+
+    /**
+     * @param SymfonyStyle $io
      * @return $this
      */
-    public function logInvalidRows(OutputInterface $output)
+    public function logInvalidRows(SymfonyStyle $io)
     {
-        $this->logResult($output, 'Rows, where type errors could occur', $this->invalid);
+        $this->logResult($io, 'Rows, where type errors could occur', $this->invalid);
         return $this;
     }
 
     /**
-     * @param OutputInterface $output
+     * @param SymfonyStyle $io
      * @return $this
      */
-    public function logSkippedRows(OutputInterface $output)
+    public function logSkippedRows(SymfonyStyle $io)
     {
-        $this->logResult($output, 'Rows, which were skipped according to import rules', $this->skipped);
+        $this->logResult($io, 'Rows, which were skipped according to import rules', $this->skipped);
         return $this;
     }
 

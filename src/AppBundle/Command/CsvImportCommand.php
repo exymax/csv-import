@@ -6,6 +6,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use AppBundle\Service;
 
 class CsvImportCommand extends ContainerAwareCommand
@@ -16,17 +17,24 @@ class CsvImportCommand extends ContainerAwareCommand
              ->setDescription('Simple console command that imports .csv data into mysql')
              ->setHelp('Uhhh, just fuck off');
         $this->addArgument('filename', InputArgument::REQUIRED, 'Specify the file you want to import');
-        $this->addOption('testmode', 'test', InputOption::VALUE_NONE);
+        $this->addOption('testmode', 'test', InputOption::VALUE_NONE)
+             ->addOption('logfield', 'field', InputOption::VALUE_OPTIONAL, 'code');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $io = new SymfonyStyle($input, $output);
+        $io->title("Hey, wazzup?");
+        $io->section('Importing '.$input->getArgument('filename').' into the database...');
         $importService = $this->getContainer()->get('app.csv_import_service');
+        $importService->setLoggingField($input->getOption('logfield'));
         $importService->setTestMode($input->getOption('testmode'))
                       ->initializeImporter($input->getArgument('filename'));
         $result = $importService->importData();
+        $io->newLine();
+        $io->success('Done!');
         $output->writeln('Successfully imported '.$result->getSuccessCount().' rows');
-        $importService->logInvalidRows($output)
-                      ->logSkippedRows($output);
+        $importService->logInvalidRows($io)
+                      ->logSkippedRows($io);
     }
 }
