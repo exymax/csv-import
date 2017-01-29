@@ -1,5 +1,7 @@
 <?php
+
 namespace AppBundle\Tests\Command;
+
 use AppBundle\Command\CsvImportCommand;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -9,6 +11,7 @@ class CsvImportCommandTest extends KernelTestCase
 {
     /**
      * @dataProvider inputProvider()
+     *
      * @param $input
      */
     public function testExecute($input)
@@ -28,9 +31,10 @@ class CsvImportCommandTest extends KernelTestCase
     {
         $input = [
             'command' => $command->getName(),
-            'filename' => __DIR__ . '/stock.csv',
+            'filename' => __DIR__.'/stock.csv',
             '--test-mode' => true,
         ];
+
         return $input;
     }
 }

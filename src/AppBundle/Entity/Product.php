@@ -5,7 +5,7 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Product
+ * Product.
  *
  * @ORM\Table(name="products", uniqueConstraints={@ORM\UniqueConstraint(name="UNIQ_2C11248662F10A58", columns={"code"})})
  * @ORM\Entity
@@ -27,7 +27,7 @@ class Product
     private $code;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="stock", type="integer", nullable=true)
      */
@@ -62,7 +62,7 @@ class Product
     private $description;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -70,12 +70,11 @@ class Product
      */
     private $id;
 
-
-
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
+     *
      * @return Product
      */
     public function setName($name)
@@ -86,7 +85,7 @@ class Product
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -96,9 +95,10 @@ class Product
     }
 
     /**
-     * Set code
+     * Set code.
      *
      * @param string $code
+     *
      * @return Product
      */
     public function setCode($code)
@@ -109,7 +109,7 @@ class Product
     }
 
     /**
-     * Get code
+     * Get code.
      *
      * @return string
      */
@@ -119,9 +119,10 @@ class Product
     }
 
     /**
-     * Set stock
+     * Set stock.
      *
-     * @param integer $stock
+     * @param int $stock
+     *
      * @return Product
      */
     public function setStock($stock)
@@ -132,9 +133,9 @@ class Product
     }
 
     /**
-     * Get stock
+     * Get stock.
      *
-     * @return integer
+     * @return int
      */
     public function getStock()
     {
@@ -142,9 +143,10 @@ class Product
     }
 
     /**
-     * Set added
+     * Set added.
      *
      * @param \DateTime $added
+     *
      * @return Product
      */
     public function setAdded($added)
@@ -155,7 +157,7 @@ class Product
     }
 
     /**
-     * Get added
+     * Get added.
      *
      * @return \DateTime
      */
@@ -165,9 +167,10 @@ class Product
     }
 
     /**
-     * Set cost
+     * Set cost.
      *
      * @param float $cost
+     *
      * @return Product
      */
     public function setCost($cost)
@@ -178,7 +181,7 @@ class Product
     }
 
     /**
-     * Get cost
+     * Get cost.
      *
      * @return float
      */
@@ -188,9 +191,10 @@ class Product
     }
 
     /**
-     * Set discontinued
+     * Set discontinued.
      *
      * @param \DateTime $discontinued
+     *
      * @return Product
      */
     public function setDiscontinued($discontinued)
@@ -201,7 +205,7 @@ class Product
     }
 
     /**
-     * Get discontinued
+     * Get discontinued.
      *
      * @return \DateTime
      */
@@ -211,9 +215,10 @@ class Product
     }
 
     /**
-     * Set description
+     * Set description.
      *
      * @param string $description
+     *
      * @return Product
      */
     public function setDescription($description)
@@ -224,7 +229,7 @@ class Product
     }
 
     /**
-     * Get description
+     * Get description.
      *
      * @return string
      */
@@ -234,9 +239,9 @@ class Product
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {

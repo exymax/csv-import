@@ -4,6 +4,6 @@ parameters:
 #    parameter_name: value
 
 services:
-    app.csv_import_service:
-        class: AppBundle\Service\CsvImportService
+    app.data_import_service:
+        class: AppBundle\Service\DataImportService
         arguments: ["@doctrine.orm.entity_manager"]

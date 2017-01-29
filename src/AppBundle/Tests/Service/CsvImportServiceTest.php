@@ -2,10 +2,8 @@
 
 namespace AppBundle\Tests;
 
-
 use AppBundle\Service\CsvImportService;
 use Doctrine\ORM\EntityManager;
-
 
 class CsvImportServiceTest extends \PHPUnit_Framework_TestCase
 {
@@ -13,7 +11,7 @@ class CsvImportServiceTest extends \PHPUnit_Framework_TestCase
 
     const FILENAME = '../stock.csv';
 
-    public function __construct($name = NULL, array $data = [], $dataName = '')
+    public function __construct($name = null, array $data = [], $dataName = '')
     {
         $this->service = $this->getServiceObject();
         parent::__construct($name, $data, $dataName);
@@ -24,6 +22,7 @@ class CsvImportServiceTest extends \PHPUnit_Framework_TestCase
         $emMock = $this->getMockBuilder(EntityManager::class)
             ->disableOriginalConstructor()
             ->getMock();
+
         return $emMock;
     }
 
@@ -31,6 +30,7 @@ class CsvImportServiceTest extends \PHPUnit_Framework_TestCase
     {
         $emMock = $this->getEntityManager();
         $service = new CsvImportService($emMock);
+
         return $service;
     }
 
@@ -41,25 +41,26 @@ class CsvImportServiceTest extends \PHPUnit_Framework_TestCase
             [
                 'code' => 'P0027',
                 'cost' => '1200.03',
-                'stock' => '32'
+                'stock' => '32',
             ],
             [
                 'code' => 'P0028',
                 'cost' => '900.04',
-                'stock' => '19'
+                'stock' => '19',
             ],
             // The next one will not pass because the minimum price is 5 and the minimum stock is 10
             [
                 'code' => 'P001',
                 'cost' => '4',
-                'stock' => '8'
+                'stock' => '8',
             ],
             [
                 'code' => 'P004',
                 'cost' => '2',
-                'stock' => '25'
-            ]
+                'stock' => '25',
+            ],
         ];
+
         return $testRows;
     }
 
@@ -89,22 +90,23 @@ class CsvImportServiceTest extends \PHPUnit_Framework_TestCase
                 [
                     'code' => 'P001',
                     'cost' => '12',
-                    'stock' => '6'
-                ]
+                    'stock' => '6',
+                ],
             ],
             [
                 false,
                 [
                     'code' => 'P0035',
                     'cost' => '1200',
-                    'stock' => '55'
-                ]
-            ]
+                    'stock' => '55',
+                ],
+            ],
         ];
     }
 
     /** Checks if filter denies rows in $skippedItems array
      * @dataProvider mainFilterProvider
+     *
      * @param $result
      * @param $item
      */
@@ -126,8 +128,8 @@ class CsvImportServiceTest extends \PHPUnit_Framework_TestCase
                     'code' => 'P001',
                     'cost' => 'wtf man',
                     'stock' => '42',
-                    'discontinued' => 'yes'
-                ]
+                    'discontinued' => 'yes',
+                ],
             ],
             [
                 false,
@@ -135,8 +137,8 @@ class CsvImportServiceTest extends \PHPUnit_Framework_TestCase
                     'code' => 'P0013',
                     'cost' => '452.13',
                     'stock' => 'bang bang',
-                    'discontinued' => ''
-                ]
+                    'discontinued' => '',
+                ],
             ],
             [
                 false,
@@ -144,8 +146,8 @@ class CsvImportServiceTest extends \PHPUnit_Framework_TestCase
                     'code' => 'P0011',
                     'cost' => '782.9',
                     'stock' => '42',
-                    'discontinued' => '1234'
-                ]
+                    'discontinued' => '1234',
+                ],
             ],
             [
                 true,
@@ -153,15 +155,15 @@ class CsvImportServiceTest extends \PHPUnit_Framework_TestCase
                     'code' => 'P0024',
                     'cost' => '452.13',
                     'stock' => '97',
-                    'discontinued' => 'yes'
-                ]
-            ]
+                    'discontinued' => 'yes',
+                ],
+            ],
         ];
     }
 
-
     /** Checks if filter denies rows, which have invalid field values
      * @dataProvider valueFilterProvider
+     *
      * @param $result
      * @param $item
      */
@@ -175,7 +177,7 @@ class CsvImportServiceTest extends \PHPUnit_Framework_TestCase
     public function testGetDuplicateFilter()
     {
         $data = [
-            'code' => 'P0015'
+            'code' => 'P0015',
         ];
         $filter = $this->service->getDuplicateFilter();
         $this->assertEquals(true, $filter($data));
@@ -188,12 +190,13 @@ class CsvImportServiceTest extends \PHPUnit_Framework_TestCase
     {
         return [
             [new \DateTime(), 'yes'],
-            [null, '']
+            [null, ''],
         ];
     }
 
     /**
      * @dataProvider discontinuedConverterProvider
+     *
      * @param $result
      * @param $input
      */
@@ -208,12 +211,13 @@ class CsvImportServiceTest extends \PHPUnit_Framework_TestCase
         return [
             [new \DateTime(), null],
             [null, 'abcdef'],
-            [null, 164]
+            [null, 164],
         ];
     }
 
     /**
      * @dataProvider addedConverterProvider
+     *
      * @param $result
      * @param $input
      */
@@ -229,13 +233,14 @@ class CsvImportServiceTest extends \PHPUnit_Framework_TestCase
             [
                 123, '$123',
                 456.78, '456.78',
-                12.25, '12.250'
-            ]
+                12.25, '12.250',
+            ],
         ];
     }
 
     /**
      * @dataProvider costConverterProvider
+     *
      * @param $result
      * @param $input
      */
@@ -248,15 +253,16 @@ class CsvImportServiceTest extends \PHPUnit_Framework_TestCase
     public function stockConverterProvider()
     {
         return [
-            [ null, '' ],
-            [ 25, '25' ],
-            [ 5, '5aa' ],
-            [ 0, 'aa155bcv' ],
+            [null, ''],
+            [25, '25'],
+            [5, '5aa'],
+            [0, 'aa155bcv'],
         ];
     }
 
     /**
      * @dataProvider stockConverterProvider
+     *
      * @param $result
      * @param $input
      */

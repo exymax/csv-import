@@ -29,6 +29,6 @@ class Version20170129010104 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('ALTER TABLE tblProductData DROP intStock, DROP dcCost');
+        $this->addSql('ALTER TABLE tblProductData DROP COLUMN intStock, DROP COLUMN dcCost');
     }
 }
