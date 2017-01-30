@@ -34,7 +34,7 @@ class ProductConverterAggregator extends ConverterAggregator
     public function getCostConverter()
     {
         $converter = function ($input) {
-            $cost = preg_replace("/([^0-9\\.])/i", "", $input);
+            $cost = floatval(str_replace(',', '.', str_replace('.', '', $input)));
             return (is_null($cost) || is_string($cost)) ? null : $cost;
         };
 

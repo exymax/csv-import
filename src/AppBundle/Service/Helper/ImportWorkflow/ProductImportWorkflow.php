@@ -42,12 +42,9 @@ class ProductImportWorkflow extends ImportWorkflow
     public function initializeWriter()
     {
         if ($this->testMode) {
-            $this->writer = new CallbackWriter(function ($row) {
-            });
-        } else {
             $this->writer = new DoctrineWriter($this->em, 'AppBundle:Product');
+            $this->workflow->addWriter($this->writer);
         }
-        $this->workflow->addWriter($this->writer);
     }
 
     public function getDataLog()

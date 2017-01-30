@@ -19,6 +19,8 @@ class ProductConverterTest extends \PHPUnit_Framework_TestCase
         return [
             [new \DateTime(), 'yes'],
             [null, ''],
+            [null, 12],
+            [null, '12qefsfdg']
         ];
     }
 
@@ -41,6 +43,8 @@ class ProductConverterTest extends \PHPUnit_Framework_TestCase
                 0, 'abcdef',
                 0, '',
                 123, '$123',
+                123, '123$',
+                123, '$123aas$',
                 456.78, '456.78',
                 12.25, '12.250',
             ],

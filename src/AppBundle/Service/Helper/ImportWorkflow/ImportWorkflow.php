@@ -11,7 +11,7 @@ abstract class ImportWorkflow implements ImportWorkflowInterface
     protected $reader;
     protected $writer;
     protected $file;
-    protected $testMode;
+    protected $testMode = false;
     protected $steps = [];
     protected $dataLog = [];
 

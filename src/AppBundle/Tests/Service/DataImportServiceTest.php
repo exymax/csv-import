@@ -38,7 +38,7 @@ class DataImportServiceTest extends \PHPUnit_Framework_TestCase
     public function testImportData()
     {
         $this->service->initialize(__DIR__.'/test.csv');
-        $result = new Result('Product', new \DateTime(), new \DateTime(), 3, new \SplObjectStorage());
+        $result = new Result(null, new \DateTime(), new \DateTime(), 22, new \SplObjectStorage());
 
         $this->assertEquals($this->service->importData(), $result);
     }
