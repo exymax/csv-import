@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Service\Helper\ImportWorkflow;
+namespace AppBundle\Service\ImportWorkflow;
 
 use Ddeboer\DataImport\Reader\CsvReader;
 use Ddeboer\DataImport\Workflow\StepAggregator;
@@ -15,10 +15,19 @@ abstract class ImportWorkflow implements ImportWorkflowInterface
     protected $steps = [];
     protected $dataLog = [];
 
+    /**
+     * Initializes the workflow.
+     *
+     * @param $filePath
+     *
+     * @return $this
+     */
     public function initialize($filePath)
     {
         $this->setResourceFile($filePath);
         $this->initializeWorkflow();
+
+        return $this;
     }
 
     /**
@@ -56,10 +65,10 @@ abstract class ImportWorkflow implements ImportWorkflowInterface
      */
     protected function initializeWorkflow()
     {
-            $this->initializeReader();
-            $this->workflow = new StepAggregator($this->reader);
-            $this->initializeWriter();
-            $this->initializeSteps();
+        $this->initializeReader();
+        $this->workflow = new StepAggregator($this->reader);
+        $this->initializeWriter();
+        $this->initializeSteps();
     }
 
     protected function initializeSteps()
@@ -69,6 +78,9 @@ abstract class ImportWorkflow implements ImportWorkflowInterface
         }
     }
 
+    /**
+     * Sets the reader of the workflow.
+     */
     protected function initializeReader()
     {
         $this->reader = new CsvReader($this->file);

@@ -15,6 +15,14 @@ class ConverterAggregator implements ConverterAggregatorInterface
         $this->converters = [];
     }
 
+    /**
+     * Adds $parameter converter to the $converters pool.
+     *
+     * @param $parameter
+     * @param $converter
+     *
+     * @return $this
+     */
     public function addConverter($parameter, $converter)
     {
         array_push(
@@ -27,11 +35,21 @@ class ConverterAggregator implements ConverterAggregatorInterface
         return $this;
     }
 
+    /**
+     * Returns $converters pool.
+     *
+     * @return array
+     */
     public function getConverters()
     {
         return $this->converters;
     }
 
+    /**
+     * Constructs and returns converter step.
+     *
+     * @return ValueConverterStep
+     */
     public function getStep()
     {
         $step = new ValueConverterStep();

@@ -55,12 +55,26 @@ class ProductFilterAggregator extends FilterAggregator
         return $filter;
     }
 
-    public function costIsCorrect($cost)
+    /**
+     * Helper method. Checks if $cost is a valid cost value.
+     *
+     * @param $cost
+     *
+     * @return bool
+     */
+    private function costIsCorrect($cost)
     {
         return strlen($cost) > 0 && is_numeric($cost);
     }
 
-    public function stockIsCorrect($stock)
+    /**
+     * Helper method. Checks if $stock is a valid integer value or a string, containing an integer.
+     *
+     * @param $stock
+     *
+     * @return bool
+     */
+    private function stockIsCorrect($stock)
     {
         return strlen($stock) > 0 && is_numeric($stock);
     }
@@ -113,6 +127,9 @@ class ProductFilterAggregator extends FilterAggregator
         return $this->dataLog['skipped'];
     }
 
+    /**
+     * Searches for rows which which are not appropriate to import rules.
+     */
     public function skipRows()
     {
         foreach ($this->data as $row) {

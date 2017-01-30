@@ -14,6 +14,11 @@ class ProductConverterAggregator extends ConverterAggregator
              ->addConverter('[stock]', $this->getStockConverter());
     }
 
+    /**
+     * Returns converter, which transforms 'discountinued' field.
+     *
+     * @return \Closure
+     */
     public function getDiscontinuedConverter()
     {
         $converter = function ($input) {
@@ -35,7 +40,7 @@ class ProductConverterAggregator extends ConverterAggregator
     public function getCostConverter()
     {
         $converter = function ($input) {
-            $cost = floatval(str_replace(',', '.', str_replace('.', '', $input)));
+            $cost = floatval($input);
 
             return (is_null($cost) || is_string($cost)) ? null : $cost;
         };

@@ -10,28 +10,45 @@ class FilterAggregator implements FilterAggregatorInterface
     protected $data = [];
     protected $dataLog = [];
 
-    public function addFilter($filter)
-    {
-        array_push($this->filters, $filter);
-
-        return $this;
-    }
-
+    /**
+     * Returns $filters pool.
+     *
+     * @return array
+     */
     public function getFilters()
     {
         return $this->filters;
     }
 
+    /**
+     * Sets data to be processed.
+     *
+     * @param $data
+     *
+     * @return $this
+     */
     public function setData($data)
     {
         $this->data = $data;
+
+        return $this;
     }
 
+    /**
+     * Returns $dataLog, containing skipped and invalid rows.
+     *
+     * @return array
+     */
     public function getDataLog()
     {
         return $this->dataLog;
     }
 
+    /**
+     * Constructs and returns filter step.
+     *
+     * @return FilterStep
+     */
     public function getStep()
     {
         $step = new FilterStep();
