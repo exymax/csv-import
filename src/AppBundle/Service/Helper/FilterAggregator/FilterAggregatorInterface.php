@@ -4,13 +4,35 @@ namespace AppBundle\Service\Helper\FilterAggregator;
 
 interface FilterAggregatorInterface
 {
-    function addFilter($filter);
+    /**
+     * Adds filter in the pool
+     * @param $filter
+     * @return mixed
+     */
+    public function addFilter($filter);
 
-    function getFilters();
+    /**
+     * Returns filters
+     * @return mixed
+     */
+    public function getFilters();
 
-    function setData($data);
+    /**
+     *
+     * @param $data
+     * @return mixed
+     */
+    public function setData($data);
 
-    function getDataLog();
+    /**
+     * Returns data log
+     * @return mixed
+     */
+    public function getDataLog();
 
-    function getStep();
+    /**
+     * Constructs and returns filter step
+     * @return mixed
+     */
+    public function getStep();
 }

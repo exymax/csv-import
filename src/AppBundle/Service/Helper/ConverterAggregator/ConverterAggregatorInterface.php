@@ -4,9 +4,23 @@ namespace AppBundle\Service\Helper\ConverterAggregator;
 
 interface ConverterAggregatorInterface
 {
-    function addConverter($parameter, $converter);
+    /**
+     * Adds converter in the pool
+     * @param $parameter
+     * @param $converter
+     * @return mixed
+     */
+    public function addConverter($parameter, $converter);
 
-    function getConverters();
+    /**
+     * Returns converters
+     * @return mixed
+     */
+    public function getConverters();
 
-    function getStep();
+    /**
+     * Creates and returns constructed converter step
+     * @return mixed
+     */
+    public function getStep();
 }

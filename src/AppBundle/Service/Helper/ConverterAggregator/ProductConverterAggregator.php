@@ -10,8 +10,8 @@ class ProductConverterAggregator extends ConverterAggregator
 
         $this
             ->addConverter('[discontinued]', $this->getDiscontinuedConverter())
-             ->addConverter('[cost]', $this->getCostConverter());
-             //->addConverter('[stock]', $this->getStockConverter());
+             ->addConverter('[cost]', $this->getCostConverter())
+             ->addConverter('[stock]', $this->getStockConverter());
     }
 
     public function getDiscontinuedConverter()
