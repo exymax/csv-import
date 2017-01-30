@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Service\Helper;
+namespace AppBundle\Service\FilterAggregator;
 
 use AppBundle\Service\Helper\LimitationConstants as Limits;
 

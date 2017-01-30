@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Service\Helper;
+namespace AppBundle\Service\ImportWorkflow;
 
 use Ddeboer\DataImport\Writer\CallbackWriter;
 use Ddeboer\DataImport\Writer\DoctrineWriter;

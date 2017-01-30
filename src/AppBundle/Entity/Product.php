@@ -5,9 +5,9 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Product.
+ * Product
  *
- * @ORM\Table(name="products", uniqueConstraints={@ORM\UniqueConstraint(name="UNIQ_2C11248662F10A58", columns={"code"})})
+ * @ORM\Table(name="tblProductData", uniqueConstraints={@ORM\UniqueConstraint(name="strProductCode", columns={"strProductCode"})})
  * @ORM\Entity
  */
 class Product
@@ -15,56 +15,56 @@ class Product
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=255, nullable=true)
+     * @ORM\Column(name="strProductName", type="string", length=255)
      */
     private $name;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="code", type="string", length=255, nullable=true)
+     * @ORM\Column(name="strProductCode", type="string", length=255)
      */
     private $code;
 
     /**
      * @var int
      *
-     * @ORM\Column(name="stock", type="integer", nullable=true)
+     * @ORM\Column(name="intStock", type="integer")
      */
     private $stock;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="added", type="datetime", nullable=true)
+     * @ORM\Column(name="dtmAdded", type="datetime")
      */
     private $added;
 
     /**
      * @var float
      *
-     * @ORM\Column(name="cost", type="float", precision=10, scale=0, nullable=true)
+     * @ORM\Column(name="dcCost", type="decimal", precision=10, scale=2)
      */
     private $cost;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="discontinued", type="datetime", nullable=true)
+     * @ORM\Column(name="dtmDiscontinued", type="datetime")
      */
     private $discontinued;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="description", type="string", length=512, nullable=true)
+     * @ORM\Column(name="strProductDesc", type="string", length=512)
      */
     private $description;
 
     /**
      * @var int
      *
-     * @ORM\Column(name="id", type="integer")
+     * @ORM\Column(name="intProductDataId", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */

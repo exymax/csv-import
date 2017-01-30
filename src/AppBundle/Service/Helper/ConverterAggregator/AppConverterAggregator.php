@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Service\Helper;
+namespace AppBundle\Service\Helper\ConverterAggregator;
 
 class AppConverterAggregator extends ConverterAggregator
 {

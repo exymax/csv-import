@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Service\Helper;
+namespace AppBundle\Service\FilterAggregator;
 
 use Ddeboer\DataImport\Step\FilterStep;
 
