@@ -22,7 +22,8 @@ abstract class ImportWorkflow implements ImportWorkflowInterface
     }
 
     /**
-     * Enables "test" mode: data is processed in the same way, but not inserted into a database
+     * Enables "test" mode: data is processed in the same way, but not inserted into a database.
+     *
      * @param $mode
      *
      * @return $this
@@ -35,8 +36,10 @@ abstract class ImportWorkflow implements ImportWorkflowInterface
     }
 
     /**
-     * Sets import source file
+     * Sets import source file.
+     *
      * @param $filePath
+     *
      * @throws \Exception
      */
     protected function setResourceFile($filePath)
@@ -49,7 +52,7 @@ abstract class ImportWorkflow implements ImportWorkflowInterface
     }
 
     /**
-     * Initializes importer workflow(source reader, database writer and steps of processing: filtering, conversion, etc.)
+     * Initializes importer workflow(source reader, database writer and steps of processing: filtering, conversion, etc.).
      */
     protected function initializeWorkflow()
     {
@@ -95,13 +98,15 @@ abstract class ImportWorkflow implements ImportWorkflowInterface
     }
 
     /**
-     * Executes import process
+     * Executes import process.
+     *
      * @return mixed
      */
     public function process()
     {
         $this->workflow->setSkipItemOnFailure(false);
         $result = $this->workflow->process();
+
         return $result;
     }
 }

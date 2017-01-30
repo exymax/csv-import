@@ -45,7 +45,7 @@ class ProductFilterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * This test also checks "rowFits" method because uses it results in the own logic
+     * This test also checks "rowFits" method because uses it results in the own logic.
      **/
     public function testGetSkippedRows()
     {
@@ -168,5 +168,4 @@ class ProductFilterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(true, $filter($data));
         $this->assertEquals(false, $filter($data));
     }
-
 }

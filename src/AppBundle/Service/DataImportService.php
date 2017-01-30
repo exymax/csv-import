@@ -21,6 +21,7 @@ class DataImportService
 
     /**
      * @param $filePath
+     *
      * @return $this
      */
     public function initialize($filePath)
@@ -49,6 +50,7 @@ class DataImportService
 
     /**
      * The main method, which starts the process of importing.
+     *
      * @return mixed
      */
     public function importData()

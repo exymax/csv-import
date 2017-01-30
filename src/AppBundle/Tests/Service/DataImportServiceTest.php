@@ -42,5 +42,4 @@ class DataImportServiceTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($this->service->importData(), $result);
     }
-
 }

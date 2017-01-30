@@ -32,5 +32,4 @@ class ProductWorkflowTest extends \PHPUnit_Framework_TestCase
         $result = new Result(null, new \DateTime(), new \DateTime(), 22, new \SplObjectStorage());
         $this->assertEquals($this->aggregator->process(), $result);
     }
-
 }

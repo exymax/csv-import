@@ -20,7 +20,7 @@ class ProductConverterTest extends \PHPUnit_Framework_TestCase
             [new \DateTime(), 'yes'],
             [null, ''],
             [null, 12],
-            [null, '12qefsfdg']
+            [null, '12qefsfdg'],
         ];
     }
 

@@ -12,11 +12,13 @@ class ProductFilterAggregator extends FilterAggregator
     {
         $this->dataLog = [
             'invalid' => [],
-            'skipped' => []
+            'skipped' => [],
         ];
-        $this->addFilter($this->getSkippedFilter())
-            ->addFilter($this->getValueFilter())
-            ->addFilter($this->getDuplicateFilter());
+        $this->filters = [
+            $this->getSkippedFilter(),
+            $this->getValueFilter(),
+            $this->getDuplicateFilter(),
+        ];
     }
 
     /**
@@ -32,7 +34,8 @@ class ProductFilterAggregator extends FilterAggregator
     }
 
     /**
-     * Returns value filter, which allows only rows with correct data
+     * Returns value filter, which allows only rows with correct data.
+     *
      * @return \Closure
      */
     public function getValueFilter()
@@ -63,7 +66,8 @@ class ProductFilterAggregator extends FilterAggregator
     }
 
     /**
-     * Returns duplicate filter, which accepts only rows with unique 'code' field
+     * Returns duplicate filter, which accepts only rows with unique 'code' field.
+     *
      * @return \Closure
      */
     public function getDuplicateFilter()
@@ -85,7 +89,8 @@ class ProductFilterAggregator extends FilterAggregator
     }
 
     /**
-     * Checks, if the row accepts import rules
+     * Checks, if the row accepts import rules.
+     *
      * @param $row
      *
      * @return bool

@@ -4,7 +4,6 @@ namespace AppBundle\Service\Helper\ImportWorkflow;
 
 use AppBundle\Service\Helper\ConverterAggregator\ProductConverterAggregator;
 use AppBundle\Service\Helper\FilterAggregator\ProductFilterAggregator;
-use Ddeboer\DataImport\Writer\CallbackWriter;
 use Ddeboer\DataImport\Writer\DoctrineWriter;
 use Doctrine\ORM\EntityManager;
 
