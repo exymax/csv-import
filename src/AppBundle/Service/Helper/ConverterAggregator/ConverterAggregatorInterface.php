@@ -1,12 +1,12 @@
 <?php
 
-namespace AppBundle\Service\Helper;
+namespace AppBundle\Service\Helper\ConverterAggregator;
 
 interface ConverterAggregatorInterface
 {
-    public function addConverter($parameter, $converter);
+    function addConverter($parameter, $converter);
 
-    public function getConverters();
+    function getConverters();
 
-    public function getStep();
+    function getStep();
 }

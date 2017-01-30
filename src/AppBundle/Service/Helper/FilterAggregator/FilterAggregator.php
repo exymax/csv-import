@@ -1,20 +1,14 @@
 <?php
 
-namespace AppBundle\Service\FilterAggregator;
+namespace AppBundle\Service\Helper\FilterAggregator;
 
 use Ddeboer\DataImport\Step\FilterStep;
 
 class FilterAggregator implements FilterAggregatorInterface
 {
-    protected $filters;
-    protected $data;
-    protected $dataLog;
-
-    public function __construct()
-    {
-        $this->filters = [];
-        $this->dataLog = [];
-    }
+    protected $filters = [];
+    protected $data = [];
+    protected $dataLog = [];
 
     public function addFilter($filter)
     {
@@ -28,7 +22,7 @@ class FilterAggregator implements FilterAggregatorInterface
         return $this->filters;
     }
 
-    public function setData(array $data)
+    public function setData($data)
     {
         $this->data = $data;
     }
@@ -41,8 +35,7 @@ class FilterAggregator implements FilterAggregatorInterface
     public function getStep()
     {
         $step = new FilterStep();
-        $filters = $this->filters;
-        foreach ($filters as $filter) {
+        foreach ($this->filters as $filter) {
             $step->add($filter);
         }
 

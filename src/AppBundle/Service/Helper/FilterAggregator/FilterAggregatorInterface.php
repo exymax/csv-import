@@ -1,16 +1,16 @@
 <?php
 
-namespace AppBundle\Service\FilterAggregator;
+namespace AppBundle\Service\Helper\FilterAggregator;
 
 interface FilterAggregatorInterface
 {
-    public function addFilter($filter);
+    function addFilter($filter);
 
-    public function getFilters();
+    function getFilters();
 
-    public function setData(array $data);
+    function setData($data);
 
-    public function getDataLog();
+    function getDataLog();
 
-    public function getStep();
+    function getStep();
 }

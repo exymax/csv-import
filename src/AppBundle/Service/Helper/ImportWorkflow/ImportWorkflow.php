@@ -1,26 +1,19 @@
 <?php
 
-namespace AppBundle\Service\ImportWorkflow;
+namespace AppBundle\Service\Helper\ImportWorkflow;
 
 use Ddeboer\DataImport\Reader\CsvReader;
 use Ddeboer\DataImport\Workflow\StepAggregator;
-use Ddeboer\DataImport\Writer\CallbackWriter;
 
-class ImportWorkflow implements ImportWorkflowInterface
+abstract class ImportWorkflow implements ImportWorkflowInterface
 {
     protected $workflow;
     protected $reader;
     protected $writer;
     protected $file;
     protected $testMode;
-    protected $steps;
-    protected $dataLog;
-
-    public function __construct()
-    {
-        $this->steps = [];
-        $this->dataLog = [];
-    }
+    protected $steps = [];
+    protected $dataLog = [];
 
     public function initialize($filePath)
     {
@@ -28,7 +21,8 @@ class ImportWorkflow implements ImportWorkflowInterface
         $this->initializeWorkflow();
     }
 
-    /** Enables "test" mode: data is processed in the same way, but not inserted into a database
+    /**
+     * Enables "test" mode: data is processed in the same way, but not inserted into a database
      * @param $mode
      *
      * @return $this
@@ -40,7 +34,12 @@ class ImportWorkflow implements ImportWorkflowInterface
         return $this;
     }
 
-    public function setResourceFile($filePath)
+    /**
+     * Sets import source file
+     * @param $filePath
+     * @throws \Exception
+     */
+    protected function setResourceFile($filePath)
     {
         $fileInfo = new \SplFileInfo($filePath);
         if (!$fileInfo->isFile()) {
@@ -49,27 +48,25 @@ class ImportWorkflow implements ImportWorkflowInterface
         $this->file = new \SplFileObject($filePath);
     }
 
-    // Initializes importer workflow(source reader, database writer and steps of processing: filtering, conversion, etc.)
-    public function initializeWorkflow()
+    /**
+     * Initializes importer workflow(source reader, database writer and steps of processing: filtering, conversion, etc.)
+     */
+    protected function initializeWorkflow()
     {
-        try {
             $this->initializeReader();
             $this->workflow = new StepAggregator($this->reader);
             $this->initializeWriter();
             $this->initializeSteps();
-        } catch (\Exception $e) {
-            die($e->getMessage());
-        }
     }
 
-    public function initializeSteps()
+    protected function initializeSteps()
     {
         foreach ($this->steps as $step) {
             $this->workflow->addStep($step);
         }
     }
 
-    public function initializeReader()
+    protected function initializeReader()
     {
         $this->reader = new CsvReader($this->file);
         $this->reader->setHeaderRowNumber(0);
@@ -77,12 +74,11 @@ class ImportWorkflow implements ImportWorkflowInterface
         $this->reader->setStrict(false);
     }
 
-    public function initializeWriter()
-    {
-        $this->writer = new CallbackWriter(function ($row) {
-        });
-    }
+    abstract protected function initializeWriter();
 
+    /**
+     * @return int
+     */
     public function getTotalRowsCount()
     {
         $number = count($this->reader);
@@ -90,16 +86,22 @@ class ImportWorkflow implements ImportWorkflowInterface
         return $number;
     }
 
+    /**
+     * @return array
+     */
     public function getDataLog()
     {
         return $this->dataLog;
     }
 
+    /**
+     * Executes import process
+     * @return mixed
+     */
     public function process()
     {
         $this->workflow->setSkipItemOnFailure(false);
         $result = $this->workflow->process();
-
         return $result;
     }
 }

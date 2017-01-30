@@ -2,36 +2,16 @@
 
 namespace AppBundle\Tests;
 
-use AppBundle\Service\CsvImportService;
-use Doctrine\ORM\EntityManager;
+use AppBundle\Service\Helper\FilterAggregator\ProductFilterAggregator;
 
-class CsvImportServiceTest extends \PHPUnit_Framework_TestCase
+class ProductFilterTest extends \PHPUnit_Framework_TestCase
 {
-    private $service;
+    private $aggregator;
 
-    const FILENAME = '../stock.csv';
-
-    public function __construct($name = null, array $data = [], $dataName = '')
+    public function setUp()
     {
-        $this->service = $this->getServiceObject();
-        parent::__construct($name, $data, $dataName);
-    }
-
-    protected function getEntityManager()
-    {
-        $emMock = $this->getMockBuilder(EntityManager::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        return $emMock;
-    }
-
-    protected function getServiceObject()
-    {
-        $emMock = $this->getEntityManager();
-        $service = new CsvImportService($emMock);
-
-        return $service;
+        parent::setUp();
+        $this->aggregator = new ProductFilterAggregator();
     }
 
     protected function getTestRows()
@@ -64,18 +44,21 @@ class CsvImportServiceTest extends \PHPUnit_Framework_TestCase
         return $testRows;
     }
 
-    // This test also checks "rowFits" method because uses it results in the own logic
+    /**
+     * This test also checks "rowFits" method because uses it results in the own logic
+     **/
     public function testGetSkippedRows()
     {
         $testRows = $this->getTestRows();
-        // $passes is an array with skipped items
+        // $passed is an array with skipped items
         $passed = ['P0027', 'P001'];
 
         $mappingFunction = function ($item) {
             return $item['code'];
         };
-
-        $processedTestRows = array_map($mappingFunction, $this->service->getSkippedRows($testRows));
+        $this->aggregator->setData($testRows);
+        $this->aggregator->skipRows();
+        $processedTestRows = array_map($mappingFunction, $this->aggregator->getSkippedRows());
 
         $this->assertEquals($passed, $processedTestRows);
     }
@@ -110,12 +93,14 @@ class CsvImportServiceTest extends \PHPUnit_Framework_TestCase
      * @param $result
      * @param $item
      */
-    public function testGetMainFilter($result, $item)
+    public function testGetSkippedFilter($result, $item)
     {
         $data = array_map(function ($item) {
             return $item[1];
         }, $this->mainFilterProvider());
-        $filter = $this->service->getMainFilter($data);
+        $this->aggregator->setData($data);
+        $this->aggregator->skipRows();
+        $filter = $this->aggregator->getSkippedFilter($data);
         $this->assertEquals($result, $filter($item));
     }
 
@@ -169,7 +154,7 @@ class CsvImportServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetValueFilter($result, $item)
     {
-        $filter = $this->service->getValueFilter();
+        $filter = $this->aggregator->getValueFilter();
         $this->assertEquals($result, $filter($item));
     }
 
@@ -179,96 +164,9 @@ class CsvImportServiceTest extends \PHPUnit_Framework_TestCase
         $data = [
             'code' => 'P0015',
         ];
-        $filter = $this->service->getDuplicateFilter();
+        $filter = $this->aggregator->getDuplicateFilter();
         $this->assertEquals(true, $filter($data));
         $this->assertEquals(false, $filter($data));
     }
 
-    /*Testing converters*/
-    // discontinued, added, cost, stock
-    public function discontinuedConverterProvider()
-    {
-        return [
-            [new \DateTime(), 'yes'],
-            [null, ''],
-        ];
-    }
-
-    /**
-     * @dataProvider discontinuedConverterProvider
-     *
-     * @param $result
-     * @param $input
-     */
-    public function testGetDiscontinuedConverter($result, $input)
-    {
-        $converter = $this->service->getDiscontinuedConverter();
-        $this->assertEquals($result, $converter($input));
-    }
-
-    public function addedConverterProvider()
-    {
-        return [
-            [new \DateTime(), null],
-            [null, 'abcdef'],
-            [null, 164],
-        ];
-    }
-
-    /**
-     * @dataProvider addedConverterProvider
-     *
-     * @param $result
-     * @param $input
-     */
-    public function testGetAddedConverter($result, $input)
-    {
-        $converter = $this->service->getAddedConverter();
-        $this->assertEquals($result, $converter($input));
-    }
-
-    public function costConverterProvider()
-    {
-        return [
-            [
-                123, '$123',
-                456.78, '456.78',
-                12.25, '12.250',
-            ],
-        ];
-    }
-
-    /**
-     * @dataProvider costConverterProvider
-     *
-     * @param $result
-     * @param $input
-     */
-    public function testGetCostConverter($result, $input)
-    {
-        $converter = $this->service->getCostConverter();
-        $this->assertEquals($result, $converter($input));
-    }
-
-    public function stockConverterProvider()
-    {
-        return [
-            [null, ''],
-            [25, '25'],
-            [5, '5aa'],
-            [0, 'aa155bcv'],
-        ];
-    }
-
-    /**
-     * @dataProvider stockConverterProvider
-     *
-     * @param $result
-     * @param $input
-     */
-    public function testGetStockConverter($result, $input)
-    {
-        $converter = $this->service->getStockConverter();
-        $this->assertEquals($result, $converter($input));
-    }
 }

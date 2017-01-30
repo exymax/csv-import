@@ -1,22 +1,10 @@
 <?php
 
-namespace AppBundle\Service\ImportWorkflow;
+namespace AppBundle\Service\Helper\ImportWorkflow;
 
 interface ImportWorkflowInterface
 {
-    public function initializeWorkflow();
+    function initialize($filePath);
 
-    public function setResourceFile($filePath);
-
-    public function initializeReader();
-
-    public function initializeWriter();
-
-    public function initializeSteps();
-
-    public function setTestMode($mode);
-
-    public function getTotalRowsCount();
-
-    public function process();
+    function process();
 }

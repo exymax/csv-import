@@ -1,0 +1,82 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Tblproductdata
+ *
+ * @ORM\Table(name="tblProductData", uniqueConstraints={@ORM\UniqueConstraint(name="strProductCode", columns={"strProductCode"})})
+ * @ORM\Entity
+ */
+class Tblproductdata
+{
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="strProductName", type="string", length=50, nullable=false)
+     */
+    private $strproductname;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="strProductDesc", type="string", length=255, nullable=false)
+     */
+    private $strproductdesc;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="strProductCode", type="string", length=10, nullable=false)
+     */
+    private $strproductcode;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="dtmAdded", type="datetime", nullable=true)
+     */
+    private $dtmadded;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="dtmDiscontinued", type="datetime", nullable=true)
+     */
+    private $dtmdiscontinued;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="stmTimestamp", type="datetime", nullable=false)
+     */
+    private $stmtimestamp = 'CURRENT_TIMESTAMP';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="intStock", type="integer", nullable=false)
+     */
+    private $intstock;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="dcCost", type="decimal", precision=10, scale=2, nullable=false)
+     */
+    private $dccost;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="intProductDataId", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $intproductdataid;
+
+
+}
+

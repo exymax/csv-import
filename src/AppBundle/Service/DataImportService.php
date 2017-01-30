@@ -3,6 +3,7 @@
 namespace AppBundle\Service;
 
 use Doctrine\ORM\EntityManager;
+use AppBundle\Service\Helper\ImportWorkflow\ProductImportWorkflow;
 
 class DataImportService
 {
@@ -15,15 +16,25 @@ class DataImportService
      */
     public function __construct(EntityManager $em)
     {
-        $this->importWorkflow = new Helper\AppImportWorkflow($em);
+        $this->importWorkflow = new ProductImportWorkflow($em);
     }
 
     /**
      * @param $filePath
+     * @return $this
      */
     public function initialize($filePath)
     {
         $this->importWorkflow->initialize($filePath);
+
+        return $this;
+    }
+
+    public function setTestMode($mode)
+    {
+        $this->importWorkflow->setTestMode($mode);
+
+        return $this;
     }
 
     public function getTotalRowsCount()
@@ -36,7 +47,8 @@ class DataImportService
         return $this->importWorkflow->getDataLog();
     }
 
-    /** The main method, which starts the process of importing.
+    /**
+     * The main method, which starts the process of importing.
      * @return mixed
      */
     public function importData()

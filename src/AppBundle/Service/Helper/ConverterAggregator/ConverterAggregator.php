@@ -1,12 +1,14 @@
 <?php
 
-namespace AppBundle\Service\Helper;
+namespace AppBundle\Service\Helper\ConverterAggregator;
 
 use Ddeboer\DataImport\Step\ValueConverterStep;
 
 class ConverterAggregator implements ConverterAggregatorInterface
 {
     private $converters;
+
+    const PARAMETER = 'parameter';
 
     public function __construct()
     {
@@ -18,7 +20,7 @@ class ConverterAggregator implements ConverterAggregatorInterface
         array_push(
             $this->converters,
             [
-                'parameter' => $parameter,
+                self::PARAMETER => $parameter,
                 'converter' => $converter,
             ]);
 
@@ -35,7 +37,7 @@ class ConverterAggregator implements ConverterAggregatorInterface
         $step = new ValueConverterStep();
         $convertersHolder = $this->converters;
         foreach ($convertersHolder as $holderRow) {
-            $step->add($holderRow['value'], $holderRow['converter']);
+            $step->add($holderRow[self::PARAMETER], $holderRow['converter']);
         }
 
         return $step;
