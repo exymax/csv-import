@@ -2,11 +2,8 @@
 
 namespace AppBundle\Service\Helper\FilterAggregator;
 
-use AppBundle\Service\Helper\Headers;
-
 class ProductFilterAggregator extends FilterAggregator
 {
-    private $headers;
 
     const MINIMAL_COST = 5;
     const MAXIMAL_COST = 1000;
@@ -14,7 +11,6 @@ class ProductFilterAggregator extends FilterAggregator
 
     public function __construct()
     {
-        $this->headers = Headers::get();
         $this->dataLog = [
             'invalid' => [],
             'skipped' => [],

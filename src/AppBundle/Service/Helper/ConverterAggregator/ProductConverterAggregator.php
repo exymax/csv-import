@@ -11,7 +11,6 @@ class ProductConverterAggregator extends ConverterAggregator
     public function __construct()
     {
         parent::__construct();
-        $this->headers = Headers::get();
         $this
             ->addConverter('[discontinued]', $this->getDiscontinuedConverter())
              ->addConverter('[cost]', $this->getCostConverter())
