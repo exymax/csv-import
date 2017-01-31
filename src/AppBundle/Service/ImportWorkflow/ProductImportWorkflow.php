@@ -35,6 +35,11 @@ class ProductImportWorkflow extends ImportWorkflow
         $this->initializeSteps();
     }
 
+    public function getRequiredHeaders()
+    {
+        return [ 'code', 'name', 'description', 'stock', 'cost', 'discontinued' ];
+    }
+
     /**
      * Rewritten version of the initializeWriter method for the current task.
      */
@@ -44,6 +49,12 @@ class ProductImportWorkflow extends ImportWorkflow
             $this->writer = new DoctrineWriter($this->em, 'AppBundle:Product');
             $this->workflow->addWriter($this->writer);
         }
+    }
+
+    public function initializeReader()
+    {
+        parent::initializeReader();
+
     }
 
     /**

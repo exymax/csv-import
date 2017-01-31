@@ -31,6 +31,8 @@ abstract class ImportWorkflow implements ImportWorkflowInterface
         return $this;
     }
 
+    abstract public function getRequiredHeaders();
+
     /**
      * Enables "test" mode: data is processed in the same way, but not inserted into a database.
      *
@@ -86,8 +88,8 @@ abstract class ImportWorkflow implements ImportWorkflowInterface
     {
         $this->reader = new CsvReader($this->file);
         $this->reader->setHeaderRowNumber(0);
-        $this->reader->setColumnHeaders(Headers::get());
         $this->reader->setStrict(false);
+        $this->reader->setColumnHeaders($this->getRequiredHeaders());
     }
 
     abstract protected function initializeWriter();

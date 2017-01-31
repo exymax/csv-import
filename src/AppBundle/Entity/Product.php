@@ -12,6 +12,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Product
 {
+    public function __construct()
+    {
+        $this->added = new \DateTime;
+    }
+
     /**
      * @var string
      *
