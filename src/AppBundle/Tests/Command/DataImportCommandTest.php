@@ -18,12 +18,12 @@ class DataImportCommandTest extends KernelTestCase
         $command = $app->find('app:data-import');
         $input = [
             'command' => 'app:data-import',
-            'filename' => __DIR__.'/stock.csv',
+            'filename' => __DIR__.'/../stock.csv',
             '--test-mode' => true,
         ];
         $commandTester = new CommandTester($command);
         $commandTester->execute($input);
         $output = $commandTester->getDisplay();
-        $this->assertContains('imported 2 of 3 rows', $output);
+        $this->assertContains('imported 22 of 29 rows', $output);
     }
 }

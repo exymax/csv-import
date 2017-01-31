@@ -27,7 +27,7 @@ class ProductWorkflowTest extends \PHPUnit_Framework_TestCase
     public function testProcess()
     {
         $this->aggregator->setTestMode(true);
-        $this->aggregator->initialize(__DIR__.'/test.csv');
+        $this->aggregator->initialize(__DIR__.'/../stock.csv');
         $result = new Result(null, new \DateTime(), new \DateTime(), 22, new \SplObjectStorage());
         $this->assertEquals($this->aggregator->process(), $result);
     }
