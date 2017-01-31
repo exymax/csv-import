@@ -16,10 +16,10 @@ class ProductConverterTest extends \PHPUnit_Framework_TestCase
     public function discontinuedConverterProvider()
     {
         return [
-            [new \DateTime(), 'yes'],
-            [null, ''],
-            [null, 12],
-            [null, '12qefsfdg'],
+            [true, 'yes'],
+            [false, ''],
+            [false, 12],
+            [false, '12qefsfdg'],
         ];
     }
 
@@ -32,7 +32,8 @@ class ProductConverterTest extends \PHPUnit_Framework_TestCase
     public function testGetDiscontinuedConverter($result, $input)
     {
         $converter = $this->aggregator->getDiscontinuedConverter();
-        $this->assertEquals($result, $converter($input));
+        $condition = !is_null($input) && $converter($input) instanceof \DateTime;
+        $this->assertEquals($result, $condition);
     }
 
     public function costConverterProvider()
