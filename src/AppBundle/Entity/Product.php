@@ -12,11 +12,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Product
 {
-    public function __construct()
-    {
-        $this->added = new \DateTime;
-    }
-
     /**
      * @var string
      *
@@ -74,6 +69,11 @@ class Product
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
+
+    public function __construct()
+    {
+        $this->added = new \DateTime;
+    }
 
     /**
      * Set name.

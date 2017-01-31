@@ -51,12 +51,6 @@ class ProductImportWorkflow extends ImportWorkflow
         }
     }
 
-    public function initializeReader()
-    {
-        parent::initializeReader();
-
-    }
-
     /**
      * Returns $dataLog - array, containing skipped and invalid rows.
      *
