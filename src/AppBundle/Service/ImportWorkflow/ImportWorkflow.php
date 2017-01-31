@@ -2,6 +2,7 @@
 
 namespace AppBundle\Service\ImportWorkflow;
 
+use AppBundle\Service\Helper\Headers;
 use Ddeboer\DataImport\Reader\CsvReader;
 use Ddeboer\DataImport\Workflow\StepAggregator;
 
@@ -85,7 +86,7 @@ abstract class ImportWorkflow implements ImportWorkflowInterface
     {
         $this->reader = new CsvReader($this->file);
         $this->reader->setHeaderRowNumber(0);
-        //$this->reader->setColumnHeaders(self::FIELDS);
+        $this->reader->setColumnHeaders(Headers::get());
         $this->reader->setStrict(false);
     }
 

@@ -2,12 +2,16 @@
 
 namespace AppBundle\Service\Helper\ConverterAggregator;
 
+use AppBundle\Service\Helper\Headers;
+
 class ProductConverterAggregator extends ConverterAggregator
 {
+    private $headers;
+
     public function __construct()
     {
         parent::__construct();
-
+        $this->headers = Headers::get();
         $this
             ->addConverter('[discontinued]', $this->getDiscontinuedConverter())
              ->addConverter('[cost]', $this->getCostConverter())
@@ -40,9 +44,10 @@ class ProductConverterAggregator extends ConverterAggregator
     public function getCostConverter()
     {
         $converter = function ($input) {
-            $cost = floatval($input);
+            $matches = [];
+            preg_match('#([0-9\.]+)#', $input, $matches);
 
-            return (is_null($cost) || is_string($cost)) ? null : $cost;
+            return (count($matches) > 0) ? floatval($matches[0]) : 0;
         };
 
         return $converter;

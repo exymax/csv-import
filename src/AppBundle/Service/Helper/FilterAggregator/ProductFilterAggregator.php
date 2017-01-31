@@ -2,14 +2,19 @@
 
 namespace AppBundle\Service\Helper\FilterAggregator;
 
+use AppBundle\Service\Helper\Headers;
+
 class ProductFilterAggregator extends FilterAggregator
 {
+    private $headers;
+
     const MINIMAL_COST = 5;
     const MAXIMAL_COST = 1000;
     const MINIMAL_STOCK = 10;
 
     public function __construct()
     {
+        $this->headers = Headers::get();
         $this->dataLog = [
             'invalid' => [],
             'skipped' => [],
@@ -41,8 +46,7 @@ class ProductFilterAggregator extends FilterAggregator
     public function getValueFilter()
     {
         $filter = function ($row) {
-            $condition =
-                $this->costIsCorrect($row['cost'])
+            $condition = $this->costIsCorrect($row['cost'])
                 && $this->stockIsCorrect($row['stock'])
                 && !is_numeric($row['discontinued']);
             if (!$condition) {
@@ -64,7 +68,10 @@ class ProductFilterAggregator extends FilterAggregator
      */
     private function costIsCorrect($cost)
     {
-        return strlen($cost) > 0 && is_numeric($cost);
+        $matches = [];
+        preg_match('#([0-9\.]+)#', $cost, $matches);
+
+        return count($matches) > 0;
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace AppBundle\Tests;
 
 use AppBundle\Service\Helper\FilterAggregator\ProductFilterAggregator;
+use AppBundle\Service\Helper\Headers;
 
 class ProductFilterTest extends \PHPUnit_Framework_TestCase
 {
@@ -13,31 +14,20 @@ class ProductFilterTest extends \PHPUnit_Framework_TestCase
         $this->aggregator = new ProductFilterAggregator();
     }
 
+    private function getItem($code = null, $cost = null, $stock = null, $discontinued = null)
+    {
+        return array_combine(Headers::get(), [$code, '', '', $stock, $cost, $discontinued]);
+    }
+
     protected function getTestRows()
     {
         $testRows = [
             // The next one will not pass because the maximum price is 1000
-            [
-                'code' => 'P0027',
-                'cost' => '1200.03',
-                'stock' => '32',
-            ],
-            [
-                'code' => 'P0028',
-                'cost' => '900.04',
-                'stock' => '19',
-            ],
+            $this->getItem('P0027', '1200.03', '32'),
+            $this->getitem('P0028', '900.04', '19'),
             // The next one will not pass because the minimum price is 5 and the minimum stock is 10
-            [
-                'code' => 'P001',
-                'cost' => '4',
-                'stock' => '8',
-            ],
-            [
-                'code' => 'P004',
-                'cost' => '2',
-                'stock' => '25',
-            ],
+            $this->getItem('P001', '4', '8'),
+            $this->getItem('P004', '2', '25'),
         ];
 
         return $testRows;
@@ -69,19 +59,11 @@ class ProductFilterTest extends \PHPUnit_Framework_TestCase
         return [
             [
                 true,
-                [
-                    'code' => 'P001',
-                    'cost' => '12',
-                    'stock' => '6',
-                ],
+                $this->getItem('P001', '12', '6'),
             ],
             [
                 false,
-                [
-                    'code' => 'P0035',
-                    'cost' => '1200',
-                    'stock' => '55',
-                ],
+                $this->getItem('P0035', '1200', '55'),
             ],
         ];
     }
@@ -108,39 +90,19 @@ class ProductFilterTest extends \PHPUnit_Framework_TestCase
         return [
             [
                 false,
-                [
-                    'code' => 'P001',
-                    'cost' => 'wtf man',
-                    'stock' => '42',
-                    'discontinued' => 'yes',
-                ],
+                $this->getItem('P001', 'wtf man', '42', 'yes'),
             ],
             [
                 false,
-                [
-                    'code' => 'P0013',
-                    'cost' => '452.13',
-                    'stock' => 'bang bang',
-                    'discontinued' => '',
-                ],
+                $this->getItem('P0013', '452.13', 'bang bang', ''),
             ],
             [
                 false,
-                [
-                    'code' => 'P0011',
-                    'cost' => '782.9',
-                    'stock' => '42',
-                    'discontinued' => '1234',
-                ],
+                $this->getItem('P011', '782.9', '42', '1234'),
             ],
             [
                 true,
-                [
-                    'code' => 'P0024',
-                    'cost' => '452.13',
-                    'stock' => '97',
-                    'discontinued' => 'yes',
-                ],
+                $this->getItem('P0024', '452.13', '97', 'yes'),
             ],
         ];
     }

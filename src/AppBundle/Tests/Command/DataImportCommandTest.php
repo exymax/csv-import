@@ -24,6 +24,6 @@ class DataImportCommandTest extends KernelTestCase
         $commandTester = new CommandTester($command);
         $commandTester->execute($input);
         $output = $commandTester->getDisplay();
-        $this->assertContains('imported 22 of 29 rows', $output);
+        $this->assertContains('imported 23 of 29 rows', $output);
     }
 }
